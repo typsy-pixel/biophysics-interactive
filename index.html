@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bio × Physics — An Interactive Biophysics Notebook</title>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-topbar" aria-label="Open module navigation">
+  <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+</button>
+<div class="nav-toggle-label" id="nav-toggle-label">Modules</div>
+<div class="nav-scrim" id="nav-scrim"></div>
+
+<header class="topbar" id="site-topbar">
+  <div class="brand">BIO<span>×</span>PHYSICS <span style="color:var(--text-dimmer); font-weight:400;">— notebook</span></div>
+  <nav class="stations" role="tablist" aria-label="Modules">
+    <button class="station-tab" id="tab-learning" data-accent="protein" data-target="station-learning" role="tab" aria-controls="station-learning" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">connect</span><span class="tab-label">Concept map</span>
+    </button>
+    <button class="station-tab" id="tab-protein" data-accent="protein" data-target="station-protein" role="tab" aria-controls="station-protein" aria-selected="true" tabindex="0">
+      <span class="tab-eyebrow">ΔG &lt; 0</span><span class="tab-label">Protein folding</span>
+    </button>
+    <button class="station-tab" id="tab-dna" data-accent="dna" data-target="station-dna" role="tab" aria-controls="station-dna" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">F(x)</span><span class="tab-label">DNA mechanics</span>
+    </button>
+    <button class="station-tab" id="tab-rna" data-accent="rna" data-target="station-rna" role="tab" aria-controls="station-rna" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">A·U / G·C</span><span class="tab-label">RNA molecule</span>
+    </button>
+    <button class="station-tab" id="tab-dna-zoom" data-accent="dna" data-target="station-dna-zoom" role="tab" aria-controls="station-dna-zoom" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">0.34 nm</span><span class="tab-label">DNA particle zoom</span>
+    </button>
+    <button class="station-tab" id="tab-membrane" data-accent="membrane" data-target="station-membrane" role="tab" aria-controls="station-membrane" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">J = −D∇C</span><span class="tab-label">Membrane diffusion</span>
+    </button>
+    <button class="station-tab" id="tab-kinesin" data-accent="protein" data-target="station-kinesin" role="tab" aria-controls="station-kinesin" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">ATP → motion</span><span class="tab-label">Kinesin motor</span>
+    </button>
+    <button class="station-tab" id="tab-hh" data-accent="dna" data-target="station-hh" role="tab" aria-controls="station-hh" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">dV/dt</span><span class="tab-label">Hodgkin–Huxley</span>
+    </button>
+    <button class="station-tab" id="tab-atp" data-accent="membrane" data-target="station-atp" role="tab" aria-controls="station-atp" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">Δp</span><span class="tab-label">ATP synthase</span>
+    </button>
+    <button class="station-tab" id="tab-plants" data-accent="plant" data-target="station-plants" role="tab" aria-controls="station-plants" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">Ψwater</span><span class="tab-label">Plant transport</span>
+    </button>
+    <button class="station-tab" id="tab-mammals" data-accent="cardiac" data-target="station-mammals" role="tab" aria-controls="station-mammals" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">P–V / pO₂</span><span class="tab-label">Mammal transport</span>
+    </button>
+    <button class="station-tab" id="tab-respiration" data-accent="photo" data-target="station-respiration" role="tab" aria-controls="station-respiration" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">H⁺ gradient</span><span class="tab-label">Respiration</span>
+    </button>
+    <button class="station-tab" id="tab-photosynthesis" data-accent="photo" data-target="station-photosynthesis" role="tab" aria-controls="station-photosynthesis" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">hν → ΔG</span><span class="tab-label">Photosynthesis</span>
+    </button>
+    <button class="station-tab" id="tab-control" data-accent="neural" data-target="station-control" role="tab" aria-controls="station-control" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">ΔVₘ</span><span class="tab-label">Control &amp; coordination</span>
+    </button>
+    <button class="station-tab" id="tab-ai-nerve" data-accent="neural" data-target="station-ai-nerve" role="tab" aria-controls="station-ai-nerve" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">AI · dissect()</span><span class="tab-label">Virtual Dissection</span>
+    </button>
+    <button class="station-tab" id="tab-genetics" data-accent="gel" data-target="station-genetics" role="tab" aria-controls="station-genetics" aria-selected="false" tabindex="-1">
+      <span class="tab-eyebrow">v = Eq / f</span><span class="tab-label">Genetic technology</span>
+    </button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-canvas"></canvas></div>
+  <div class="hero-inner">
+    <p class="eyebrow">an independent physics × biology project</p>
+    <h1 class="hero-title">The physics hiding <em>inside</em> every cell.</h1>
+    <p class="hero-sub">Interactive biophysics notebook: molecular folding, DNA mechanics, transport systems, bioenergetics, photosynthesis, neuronal firing, and genetic analysis. Each module is a simplified physical model designed to make the governing equations visible and testable.</p>
+  </div>
+</section>
+
+
+  <section id="home-page" aria-label="Biophysics Interactive home">
+    <div class="home-inner">
+      <div class="home-hero">
+        <div class="home-kicker">a working notebook for biophysics</div>
+        <h1>Physics <span>×</span> Biology</h1>
+        <p>
+          Fifteen systems, four recurring physical ideas. Start with the concept map below to see how
+          energy landscapes, gradients, thermal noise, and nonlinear feedback connect every module —
+          then open any laboratory to experiment with its interactive model.
+        </p>
+        <div class="home-actions">
+          <button class="home-primary" id="home-concept">TRACE THE FOUR IDEAS</button>
+          <button class="home-secondary" id="home-explore">BROWSE THE EXPERIMENTS</button>
+        </div>
+      </div>
+
+      <div class="map-hub">
+        <div class="map-hub-head">
+          <div class="home-kicker">start with the connections</div>
+          <h2>How the modules connect</h2>
+          <p>These systems look biologically unrelated — a folding protein, a beating heart, a leaf in sunlight — but the same handful of physical ideas keeps reappearing underneath. Tap a principle's chips to jump straight into the module that demonstrates it.</p>
+        </div>
+        <div class="field-quote">
+          <p>Nothing in biology makes sense except in the light of evolution.</p>
+          <cite>— Theodosius Dobzhansky, evolutionary biologist, 1973</cite>
+        </div>
+        <div class="map-canvas-wrap">
+          <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="50" y1="15" x2="12.5" y2="23"></line>
+            <line x1="50" y1="15" x2="37.5" y2="23"></line>
+            <line x1="50" y1="15" x2="62.5" y2="23"></line>
+            <line x1="50" y1="15" x2="87.5" y2="23"></line>
+          </svg>
+          <button type="button" class="map-hub-node" data-home-target="station-learning">
+            Physics <span>×</span> Biology
+            <small>tap for the full concept map →</small>
+          </button>
+          <div class="map-petals">
+            <div class="map-petal" data-accent="protein">
+              <h3 style="color:var(--protein)">Energy landscapes</h3>
+              <p>Systems settle into low-energy conformations, then get pushed out of them.</p>
+              <div class="map-chips">
+                <button class="map-chip" data-home-target="station-protein">Protein folding</button>
+                <button class="map-chip" data-home-target="station-rna">RNA molecule</button>
+                <button class="map-chip" data-home-target="station-dna">DNA mechanics</button>
+              </div>
+            </div>
+            <div class="map-petal" data-accent="membrane">
+              <h3 style="color:var(--membrane)">Gradients drive processes</h3>
+              <p>Concentration, pressure, and electrochemical gradients are the engines of transport.</p>
+              <div class="map-chips">
+                <button class="map-chip" data-home-target="station-membrane">Membrane diffusion</button>
+                <button class="map-chip" data-home-target="station-atp">ATP synthase</button>
+                <button class="map-chip" data-home-target="station-plants">Plant transport</button>
+                <button class="map-chip" data-home-target="station-mammals">Mammal transport</button>
+                <button class="map-chip" data-home-target="station-respiration">Respiration</button>
+                <button class="map-chip" data-home-target="station-photosynthesis">Photosynthesis</button>
+              </div>
+            </div>
+            <div class="map-petal" data-accent="dna">
+              <h3 style="color:var(--dna)">Thermal noise is everywhere</h3>
+              <p>At the nanoscale, random thermal jostling competes directly with molecular forces.</p>
+              <div class="map-chips">
+                <button class="map-chip" data-home-target="station-dna-zoom">DNA particle zoom</button>
+                <button class="map-chip" data-home-target="station-kinesin">Kinesin motor</button>
+                <button class="map-chip" data-home-target="station-genetics">Gel electrophoresis</button>
+              </div>
+            </div>
+            <div class="map-petal" data-accent="neural">
+              <h3 style="color:var(--neural)">Nonlinearity creates behavior</h3>
+              <p>Small thresholds and feedback loops turn smooth inputs into sudden, switch-like outputs.</p>
+              <div class="map-chips">
+                <button class="map-chip" data-home-target="station-hh">Hodgkin–Huxley</button>
+                <button class="map-chip" data-home-target="station-control">Control &amp; coordination</button>
+                <button class="map-chip" data-home-target="station-ai-nerve">Virtual Dissection</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="map-hint">Click any chip — or the centre node — to open that module. Use the ☰ button in the top-right corner any time to browse every module by name.</p>
+      </div>
+
+      <div class="home-section-title">browse the experiments</div>
+      <div class="home-grid">
+        <article class="home-card" data-home-target="station-learning">
+          <div class="num">01 · BIG PICTURE</div>
+          <h2>Concept Map</h2>
+          <p>The full version of the map above: every physical principle, every module, one glossary.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-protein">
+          <div class="num">02 · MOLECULAR STRUCTURE</div>
+          <h2>Protein Folding</h2>
+          <p>Explore hydrophobic collapse, energy landscapes, Monte Carlo search, and simulated annealing.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-dna">
+          <div class="num">03 · POLYMER PHYSICS</div>
+          <h2>DNA Mechanics</h2>
+          <p>Investigate force–extension behavior, persistence length, and the worm-like chain model.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-rna">
+          <div class="num">04 · RNA BIOPHYSICS</div>
+          <h2>RNA Folding</h2>
+          <p>Learn how base pairing, stacking, ions, and tertiary contacts create functional RNA structures.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-dna-zoom">
+          <div class="num">05 · MOLECULAR SCALE</div>
+          <h2>DNA Molecular Zoom</h2>
+          <p>Step down from the double helix to bases, backbones, bonds, and nanometer-scale geometry.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-membrane">
+          <div class="num">06 · TRANSPORT</div>
+          <h2>Membrane Diffusion</h2>
+          <p>Watch Brownian particles diffuse and connect random molecular motion to Fick's laws.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-kinesin">
+          <div class="num">07 · NANOMOTOR</div>
+          <h2>Kinesin Transport</h2>
+          <p>Explore Brownian ratchets, ATP-driven stepping, load force, and force–velocity behavior.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-hh">
+          <div class="num">08 · ELECTROPHYSIOLOGY</div>
+          <h2>Hodgkin–Huxley</h2>
+          <p>Generate action potentials and see how Na⁺ and K⁺ conductances shape neuronal firing.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-atp">
+          <div class="num">09 · BIOENERGETICS</div>
+          <h2>ATP Synthase</h2>
+          <p>Connect proton-motive force, torque, rotor speed, and ATP synthesis in a rotary nanomotor.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-plants">
+          <div class="num">10 · SYLLABUS TOPIC 7</div>
+          <h2>Transport in Plants</h2>
+          <p>Alter wind, heat, humidity, and light to see transpiration pull change in a virtual potometer.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-mammals">
+          <div class="num">11 · SYLLABUS TOPIC 8</div>
+          <h2>Transport in Mammals</h2>
+          <p>Synchronise the cardiac cycle and explore how carbon dioxide shifts haemoglobin affinity.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-respiration">
+          <div class="num">12 · SYLLABUS TOPIC 12</div>
+          <h2>Energy &amp; Respiration</h2>
+          <p>Tap electrons through the respiratory chain and build a proton-motive force.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-photosynthesis">
+          <div class="num">13 · SYLLABUS TOPIC 13</div>
+          <h2>Photosynthesis</h2>
+          <p>Use the limiting-factors sandbox to identify what caps the rate of oxygen output.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-control">
+          <div class="num">14 · SYLLABUS TOPIC 15</div>
+          <h2>Control &amp; Coordination</h2>
+          <p>Trigger an action potential and observe sequential Na⁺ and K⁺ channel activity.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-genetics">
+          <div class="num">15 · GENETIC TECHNOLOGY</div>
+          <h2>Gel Electrophoresis</h2>
+          <p>Separate DNA fragments by size as voltage drives negatively charged DNA through gel.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+        <article class="home-card" data-home-target="station-ai-nerve">
+          <div class="num">16 · AI EXTENSION</div>
+          <h2>AI Virtual Dissection</h2>
+          <p>Pick any animal and let an AI model lay out its nervous system, then watch a virtual dissection reveal it, structure by structure.</p>
+          <button>OPEN EXPERIMENT →</button><div class="orb"></div>
+        </article>
+      </div>
+
+      <div class="home-note">
+        <strong>How to use this site:</strong> start with a topic, read the physical model, change the controls,
+        watch the outputs, and then compare the result with the biological explanation. The simulations are
+        educational coarse-grained models rather than full molecular-dynamics or clinical models.
+      </div>
+    </div>
+  </section>
+
+  <main id="main">
+
+  <!-- ============ STATION 1: PROTEIN FOLDING ============ -->
+  <section class="station active" id="station-protein" data-accent="protein" role="tabpanel" aria-labelledby="tab-protein" style="--accent:var(--protein)">
+    <div class="station-head">
+      <p class="eyebrow">station 01 · statistical mechanics</p>
+      <h2>Protein folding</h2>
+      <p>A protein folds because burying hydrophobic residues away from water lowers the free energy of the system. This module runs a genuine (simplified) version of that search: the <strong>HP lattice model</strong>, folding a chain of Hydrophobic/Polar residues on a 2D grid using a Monte Carlo search with simulated annealing.</p>
+      <div class="field-quote">
+        <p>Life is a relationship between molecules.</p>
+        <cite>— Linus Pauling, chemist, two-time Nobel laureate</cite>
+      </div>
+    </div>
+
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <p>Anfinsen's thermodynamic hypothesis says a protein's native structure is (usually) the global minimum of its free energy landscape — sequence determines structure. The HP model captures the dominant driving force, the hydrophobic effect, by rewarding lattice contacts between non-bonded H residues.</p>
+          <div class="eq-block">
+            ΔG = ΔH − TΔS
+            <small>folding is favoured when it lowers enthalpy (burying H residues) faster than it costs conformational entropy</small>
+          </div>
+          <div class="eq-block">
+            E(conformation) = − Σ contact(i, j), for all i, j with |i−j| &gt; 1, seq[i] = seq[j] = H, adjacent on the lattice
+            <small>every non-covalent H–H contact lowers the energy by 1 unit; the search below tries to minimise this</small>
+          </div>
+          <div class="relevance">
+            <strong>Why it matters:</strong> hydrophobic burial, hydrogen bonding, electrostatics, van der Waals interactions, and conformational entropy all contribute to real protein free-energy landscapes; the HP model captures only a small subset, and its failure mode underlies disease: misfolded amyloid-β and α-synuclein are implicated in Alzheimer's and Parkinson's.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="protein-canvas"></canvas>
+          <div class="controls">
+            <div class="field">
+              <label for="protein-seq">Sequence (H = hydrophobic, P = polar)</label>
+              <input type="text" id="protein-seq" maxlength="30" value="HPHPPHHPHPPHPHHPPHPH" />
+            </div>
+            <div class="field">
+              <div class="field-row"><label for="protein-speed">Search speed</label><span class="val" id="protein-speed-val">12 steps/frame</span></div>
+              <input type="range" id="protein-speed" min="1" max="40" value="12" />
+            </div>
+          </div>
+          <div class="sim-toolbar">
+            <button class="btn primary" id="protein-toggle">Run folding search</button>
+            <button class="btn" id="protein-reset">Reset chain</button>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Current energy</div><div class="value" id="protein-energy">0</div></div>
+            <div class="readout"><div class="label">Best found</div><div class="value" id="protein-best">0</div></div>
+            <div class="readout"><div class="label">MC steps</div><div class="value" id="protein-steps">0</div></div>
+            <div class="readout"><div class="label">Temperature</div><div class="value" id="protein-temp">2.00</div></div>
+          </div>
+          <p class="hint">The HP model is intentionally coarse-grained: it captures hydrophobic-contact energetics, not real atomic protein folding. The search is stochastic, so different runs can reach different low-energy conformations.</p>
+        </div>
+
+        <div class="card">
+          <p style="margin:0 0 6px; font-size:0.85rem; color:var(--text-dim);">Free-energy funnel (conceptual — depth tracks the current energy)</p>
+          <div class="funnel-wrap">
+            <canvas id="protein-funnel-canvas" aria-label="Conceptual protein free-energy landscape with the current conformation moving downhill"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>What is a protein actually folding into?</h3>
+          <p>A protein is a chain of amino acids connected by peptide bonds. The sequence is the primary structure; local helices and sheets form secondary structure; the complete three-dimensional arrangement is tertiary structure; and assemblies of several chains are quaternary structure.</p>
+          <p>Folding is not simply “finding the lowest energy shape.” The biologically relevant state is usually the lowest <em>free energy</em> state under a particular environment. Solvent, temperature, pH, ions, ligands, crowding, and other molecules can all change the landscape.</p>
+          <ul>
+            <li>Hydrophobic residues tend to become less exposed to water.</li>
+            <li>Hydrogen bonds help stabilize secondary and tertiary structure.</li>
+            <li>Electrostatics and salt bridges depend strongly on solvent and pH.</li>
+            <li>Disulfide bonds can strongly stabilize extracellular proteins.</li>
+            <li>van der Waals interactions contribute when atoms pack closely.</li>
+          </ul>
+        </div>
+        <div class="depth-card">
+          <h3>Why the energy landscape is a “funnel”</h3>
+          <p>There can be an enormous number of possible conformations, but many routes lead toward progressively more favorable regions. The funnel metaphor describes this bias toward lower free energy while acknowledging that local minima and kinetic barriers can trap a chain.</p>
+          <div class="mini-eq">ΔG<sub>fold</sub> = ΔH<sub>fold</sub> − TΔS<sub>fold</sub></div>
+          <p>A favorable enthalpic contribution can stabilize a structure, while restricting the chain reduces conformational entropy. The solvent also changes the entropy and enthalpy balance, which is why the hydrophobic effect is fundamentally a free-energy phenomenon.</p>
+        </div>
+        <div class="depth-card">
+          <h3>What the HP model gets right — and misses</h3>
+          <p>The hydrophobic–polar lattice model replaces real amino acids with H and P symbols and gives an energetic reward to non-bonded H–H contacts. It is excellent for demonstrating rugged landscapes, stochastic search, local minima, and the role of hydrophobic collapse.</p>
+          <ul>
+            <li>It does not model atoms, bond angles, side-chain chemistry, solvent molecules, or explicit hydrogen bonds.</li>
+            <li>Its “energy unit” is dimensionless and should not be interpreted as kcal/mol.</li>
+            <li>A low HP energy is not proof that a real protein has folded correctly.</li>
+            <li>Different Monte Carlo runs can produce different conformations because the search is stochastic.</li>
+          </ul>
+        </div>
+        <div class="depth-card">
+          <h3>How the Monte Carlo search works</h3>
+          <p>The simulation proposes a new self-avoiding conformation. If the move lowers the model energy, it is accepted. An uphill move can also be accepted with a probability that decreases as the energy penalty becomes large compared with temperature.</p>
+          <div class="mini-eq">P(accept) = exp(−ΔE / T) &nbsp; for ΔE &gt; 0</div>
+          <p>Simulated annealing gradually lowers the effective temperature. Early in the search, larger fluctuations help escape traps; later, the search becomes more selective.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Real protein folding: kinetics matters</h3>
+          <p>Two conformations can have similar free energies but very different transition barriers. Folding therefore has both thermodynamic and kinetic questions: which state is most stable, and how quickly can the chain reach it?</p>
+          <p>Proteins can misfold or aggregate. Molecular chaperones can help some proteins reach productive conformations, but they do not simply “tell” a protein its structure. They alter the folding environment and reduce inappropriate interactions.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Explore it experimentally in the simulator</h3>
+          <ul>
+            <li>Run the same sequence several times and compare the final energies.</li>
+            <li>Increase the search speed and watch how quickly the best energy improves.</li>
+            <li>Compare a hydrophobic-rich sequence with a polar-rich sequence.</li>
+            <li>Look for cases where the current structure is worse than the best structure already found.</li>
+            <li>Interpret the funnel as a conceptual free-energy map, not an atomic energy surface.</li>
+          </ul>
+        </div>
+      </div>
+
+      <details class="deeper-dive">
+        <summary>Go deeper: Levinthal's paradox and misfolding disease <span class="plus">+</span></summary>
+        <div class="dive-body">
+          <p><strong>Levinthal's paradox.</strong> A modest 100-residue chain has on the order of 10<sup>47</sup> possible conformations. Sampling them one at a time, even at femtosecond speed, would take far longer than the age of the universe — yet real proteins fold in microseconds to seconds. Cyrus Levinthal used this in 1969 to argue that folding cannot be a random search; it must be guided, which is exactly what the funnel picture in the panel above captures. The chain never explores most of conformation space at all — it is biased toward lower free energy from the very first step.</p>
+          <p><strong>When folding goes wrong.</strong> Misfolded proteins that resist clearance can aggregate into insoluble amyloid fibrils. This is the molecular basis of diseases including Alzheimer's (amyloid-β, tau), Parkinson's (α-synuclein), type 2 diabetes (islet amyloid polypeptide), and the prion diseases, where a misfolded conformation can even template the same misfolding in neighbouring, correctly-folded copies of the protein. The cell's quality-control system — chaperones, the ubiquitin–proteasome pathway, and autophagy — normally intercepts these species before they accumulate.</p>
+          <p><strong>Why simulate it at all?</strong> Full atomistic molecular dynamics of a real protein folding event remains one of the most computationally expensive calculations in biophysics — some of the longest published simulations still needed purpose-built supercomputers to reach millisecond timescales. Lattice models like the one here trade physical detail for the ability to run the whole search live, in your browser, in milliseconds, while still reproducing the qualitative physics: rugged landscapes, kinetic traps, and funnel-like convergence.</p>
+        </div>
+      </details>
+  </section>
+
+  <!-- ============ STATION 2: DNA MECHANICS ============ -->
+  <section class="station" id="station-dna" data-accent="dna" role="tabpanel" aria-labelledby="tab-dna" style="--accent:var(--dna)">
+    <div class="station-head">
+      <p class="eyebrow">station 02 · polymer physics</p>
+      <h2>DNA mechanics</h2>
+      <p>Double-stranded DNA behaves like a semi-flexible rod: floppy over long distances, stiff over short ones. The <strong>worm-like chain (WLC) model</strong> — the standard model used to interpret optical- and magnetic-tweezer experiments — predicts exactly how much force is needed to stretch it.</p>
+      <div class="field-quote">
+        <p>It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material.</p>
+        <cite>— James Watson &amp; Francis Crick, Nature, 25 April 1953</cite>
+      </div>
+    </div>
+
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <p>The chain's stiffness is set by its <em>persistence length</em>, L<sub>p</sub> (~50 nm for dsDNA — about 150 base pairs) — the length scale over which thermal fluctuations randomise its direction. The Marko–Siggia interpolation formula gives the force needed to hold the chain at a given fractional extension x/L:</p>
+          <div class="eq-block">
+            F(x) = (k<sub>B</sub>T / L<sub>p</sub>) · [ ¼(1 − x/L)<sup>−2</sup> − ¼ + x/L ]
+            <small>k_BT ≈ 4.1 pN·nm at room temperature; F diverges as x/L → 1, since a straight rod can't be stretched further</small>
+          </div>
+          <p>Drag the sliders to apply a force and change stiffness — the extension is solved numerically (bisection) from the equation above, and plotted against the theoretical curve in real time.</p>
+          <div class="relevance">
+            <strong>Why it matters:</strong> this same physics explains how ~2m of DNA packs into a nucleus — through supercoiling and nucleosome wrapping — and single-molecule tweezer experiments built on the WLC model are how biophysicists measure the forces motor proteins like RNA polymerase exert on DNA in real cells.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="dna-canvas"></canvas>
+          <div class="controls">
+            <div class="field">
+              <div class="field-row"><label for="dna-force">Applied force</label><span class="val" id="dna-force-val">2.0 pN</span></div>
+              <input type="range" id="dna-force" min="0.05" max="18" step="0.05" value="2" />
+            </div>
+            <div class="field">
+              <div class="field-row"><label for="dna-lp">Persistence length L<sub>p</sub></label><span class="val" id="dna-lp-val">50 nm</span></div>
+              <input type="range" id="dna-lp" min="10" max="100" step="1" value="50" />
+            </div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Extension x/L</div><div class="value" id="dna-ext">0%</div></div>
+            <div class="readout"><div class="label">Force</div><div class="value" id="dna-force-read">2.0 pN</div></div>
+            <div class="readout"><div class="label">L<sub>p</sub></div><div class="value" id="dna-lp-read">50 nm</div></div>
+          </div>
+          <p class="hint">At the same pulling force, a stiffer chain (larger L<sub>p</sub>) reaches a larger fraction of its contour length. A flexible chain needs more force to reach the same fractional extension; every chain resists sharply as it approaches full extension.</p>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>DNA as a polymer</h3>
+          <p>DNA is a charged polymer made of nucleotides. Each nucleotide contains a sugar, phosphate group, and nitrogenous base. The phosphodiester backbone gives DNA a negative charge, while the base sequence stores genetic information.</p>
+          <p>At long length scales, DNA can be treated as a semiflexible polymer rather than a rigid rod. Thermal fluctuations bend the molecule, while stretching force suppresses those fluctuations.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Worm-like chain model</h3>
+          <p>The worm-like chain (WLC) model describes a polymer with a bending persistence length. For DNA under ordinary ionic conditions, the persistence length is roughly 50 nm, though it depends on salt concentration and other conditions.</p>
+          <div class="mini-eq">F(x) ≈ (k<sub>B</sub>T / L<sub>p</sub>) [1/(4(1−x/L)<sup>2</sup>) − 1/4 + x/L]</div>
+          <p>Here x/L is fractional extension and L<sub>p</sub> is persistence length. The force rises sharply as extension approaches the contour length.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Why the force curve is nonlinear</h3>
+          <p>At low force, DNA can gain extension mainly by straightening thermally excited bends. At higher force, the chain is increasingly aligned. Near full extension, there are very few configurations left, so the entropic resistance becomes extremely steep.</p>
+          <ul>
+            <li>Low force → entropy dominates.</li>
+            <li>Intermediate force → polymer progressively aligns.</li>
+            <li>High force → extension approaches contour length.</li>
+          </ul>
+        </div>
+        <div class="depth-card">
+          <h3>DNA mechanics in biology</h3>
+          <p>Mechanical properties matter because DNA is constantly bent, twisted, compacted, and pulled inside cells. DNA-binding proteins, nucleosomes, polymerases, helicases, and topoisomerases all interact with its mechanics.</p>
+          <p>Supercoiling is especially important: changing twist can generate writhe, allowing a long chromosome to fit into a small cellular volume.</p>
+        </div>
+        <div class="depth-card">
+          <h3>What the simulator simplifies</h3>
+          <p>The WLC description treats DNA as a continuous semiflexible chain and does not explicitly resolve individual base pairs. It therefore captures polymer elasticity, not sequence-specific interactions, base-pair melting, protein binding, or chromatin structure.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Try these investigations</h3>
+          <ul>
+            <li>Compare extension at low and high force.</li>
+            <li>Find where the curve becomes very steep.</li>
+            <li>Ask how changing temperature would alter k<sub>B</sub>T and therefore entropic elasticity.</li>
+            <li>Relate persistence length to the intuitive idea of “stiffness over a distance.”</li>
+          </ul>
+        </div>
+      </div>
+  </section>
+
+  <!-- ============ STATION 3: RNA MOLECULE ============ -->
+<div class="experiment-runner" data-runner="dna">
+  <div><strong>Experiment run</strong><span>Change force or persistence length, then apply the values.</span></div>
+  <div class="experiment-runner-actions"><button class="btn primary" id="dna-run" type="button">Run calculation</button><span class="experiment-status" id="dna-run-status" role="status">Ready</span></div>
+</div>
+
+
+<section class="station" id="station-rna" data-accent="rna" role="tabpanel" aria-labelledby="tab-rna" style="--accent:var(--rna)">
+    <div class="station-head">
+      <p class="eyebrow">station 03 · molecular structure</p>
+      <h2>Folded RNA molecule</h2>
+      <p>RNA is not just a genetic message: a single strand can fold into compact shapes that recognise molecules, catalyse reactions, and regulate genes. This 3D molecular-style renderer shows a folded RNA-like chain with phosphate, sugar, and base groups.</p>
+      <div class="field-quote">
+        <p>Science and everyday life cannot and should not be separated.</p>
+        <cite>— Rosalind Franklin, X-ray crystallographer, whose later work solved the structure of RNA viruses</cite>
+      </div>
+    </div>
+
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <p>Every nucleotide has a phosphate backbone, a ribose sugar, and a nitrogenous base. Hydrogen-bonded base pairs and stacking interactions stabilise the shapes RNA adopts in cells.</p>
+          <div class="eq-block">
+            RNA secondary structure = base pairing + stacking + electrostatic screening
+            <small>the compact shape is an energy compromise between favourable local contacts and the cost of bending a charged backbone</small>
+          </div>
+          <div class="relevance">
+            <strong>Why it matters:</strong> folded RNA drives ribosomes and many viruses, while mRNA vaccines rely on carefully designed RNA structures that remain stable long enough to reach cells.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="rna-canvas" aria-label="Animated three-dimensional molecular view of folded RNA"></canvas>
+          <div class="sim-toolbar">
+            <button class="btn primary" id="rna-spin" type="button">Pause rotation</button>
+            <button class="btn" id="rna-pairs" type="button" aria-pressed="false">Show base pairs</button>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Nucleotides</div><div class="value">42</div></div>
+            <div class="readout"><div class="label">Structure</div><div class="value">Folded</div></div>
+            <div class="readout"><div class="label">Pairs</div><div class="value" id="rna-pair-count">Hidden</div></div>
+          </div>
+          <div class="molecule-legend" aria-label="Molecule colour key">
+            <span class="molecule-key"><span class="molecule-swatch" style="background:#f1c66b"></span>phosphate</span>
+            <span class="molecule-key"><span class="molecule-swatch" style="background:#83b9ff"></span>ribose</span>
+            <span class="molecule-key"><span class="molecule-swatch" style="background:#b989ff"></span>base</span>
+          </div>
+          <p class="molecule-note">A detailed molecular-style visualisation, built for exploration rather than a structural prediction of one specific RNA sequence.</p>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>RNA is both information and structure</h3>
+          <p>RNA is a polymer of ribonucleotides containing A, U, G, and C. Unlike DNA, RNA commonly folds into compact three-dimensional structures that can directly perform biochemical functions.</p>
+          <p>Messenger RNA carries information, transfer RNA helps decode codons, ribosomal RNA forms the structural and catalytic core of ribosomes, and many non-coding RNAs regulate gene expression or catalyze reactions.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Base pairing and secondary structure</h3>
+          <p>Watson–Crick A–U and G–C pairing is central, but RNA also forms non-canonical pairs and tertiary contacts. Stems, hairpins, internal loops, bulges, and junctions create the scaffolds from which complex folds emerge.</p>
+          <ul>
+            <li>A–U usually forms two hydrogen bonds.</li>
+            <li>G–C usually forms three hydrogen bonds.</li>
+            <li>Base stacking contributes strongly to stability.</li>
+            <li>Mg<sup>2+</sup> and other ions can stabilize compact RNA structures.</li>
+          </ul>
+        </div>
+        <div class="depth-card">
+          <h3>Why RNA folding is difficult</h3>
+          <p>The sequence does not uniquely determine a simple “best-looking” geometry. RNA has many competing interactions, and folding can be strongly affected by ionic conditions, temperature, ligands, proteins, and transcriptional history.</p>
+          <p>The illustration in this project is therefore a molecular-style visualization rather than a solved experimental structure.</p>
+        </div>
+        <div class="depth-card">
+          <h3>RNA as a molecular machine</h3>
+          <p>Some RNAs are catalytic. Ribozymes demonstrate that biological catalysis is not restricted to proteins. The ribosome itself is a striking example: its catalytic center is dominated by ribosomal RNA.</p>
+        </div>
+      </div>
+
+      <details class="deeper-dive">
+        <summary>Go deeper: the RNA World and engineering mRNA vaccines <span class="plus">+</span></summary>
+        <div class="dive-body">
+          <p><strong>The RNA World hypothesis.</strong> Because RNA can both store genetic information (like DNA) and catalyse chemical reactions (like protein enzymes), many origin-of-life researchers propose that early life relied on RNA alone, before DNA and protein enzymes took over their respective specialised roles. The 1980s discovery of catalytic RNA — ribozymes, by Thomas Cech and Sidney Altman, who shared the 1989 Nobel Prize in Chemistry for it — was the experimental evidence that made this idea plausible rather than purely speculative.</p>
+          <p><strong>Designing a folded RNA on purpose.</strong> mRNA vaccines are a direct engineering application of everything in this module. The sequence is optimised so the folded mRNA resists degradation by cellular ribonucleases for long enough to be translated, while a modified nucleoside (commonly N1-methylpseudouridine) reduces the innate immune system's tendency to recognise foreign RNA and shut down its translation. Getting the secondary structure right is not cosmetic — it is the difference between an mRNA that survives to be read and one that is degraded within minutes.</p>
+          <p><strong>Where the physics gets harder.</strong> Unlike DNA's regular double helix, RNA folding is combinatorially difficult to predict from sequence alone: a single strand can pair with itself in many competing ways, and which fold wins can depend on the order bases emerge from the ribosome during transcription (co-transcriptional folding), not just the final sequence. This is why RNA structure prediction remains an active computational research area, distinct from and in some ways harder than protein structure prediction.</p>
+        </div>
+      </details>
+  </section>
+
+  <!-- ============ STATION 4: DNA PARTICLE ZOOM ============ -->
+  <section class="station" id="station-dna-zoom" data-accent="dna" role="tabpanel" aria-labelledby="tab-dna-zoom" style="--accent:var(--dna)">
+    <div class="station-head">
+      <p class="eyebrow">station 04 · molecular scale</p>
+      <h2>DNA particle zoom</h2>
+      <p>Move from the familiar double helix to individual base-pair particles. Zoom in to inspect the paired nucleotides, their sugar–phosphate backbone, and the hydrogen bonds that link the two strands.</p>
+      <div class="field-quote">
+        <p>The nitrogen in our DNA... was made in the interiors of collapsing stars. We are made of starstuff.</p>
+        <cite>— Carl Sagan, astronomer, <em>Cosmos</em>, 1980</cite>
+      </div>
+    </div>
+
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <p>A DNA base pair is held together by hydrogen bonds: A pairs with T, and G pairs with C. The paired bases sit inside the double helix while the negatively charged phosphate backbone faces outward toward water.</p>
+          <div class="eq-block">
+            1 helix turn ≈ 10.5 base pairs ≈ 3.4 nm
+            <small>the distance between neighbouring base pairs is about 0.34 nm — far below what an optical microscope can resolve directly</small>
+          </div>
+          <div class="relevance">
+            <strong>Why it matters:</strong> sequence-level changes as small as one base pair can alter a protein, switch a regulatory element, or be detected by modern DNA sequencing technologies.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="dna-zoom-canvas" aria-label="DNA double helix with zoomable nucleotide particles"></canvas>
+          <div class="sim-toolbar">
+            <button class="btn primary" id="dna-zoom-toggle" type="button" aria-pressed="false">Zoom into base pairs</button>
+            <button class="btn" id="dna-zoom-motion" type="button" aria-pressed="false">Pause particle motion</button>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">View</div><div class="value" id="dna-zoom-level">Helix</div></div>
+            <div class="readout"><div class="label">Visible pairs</div><div class="value" id="dna-zoom-pairs">22</div></div>
+            <div class="readout"><div class="label">Scale</div><div class="value" id="dna-zoom-scale">3.4 nm</div></div>
+          </div>
+          <p class="hint"><span class="zoom-status" id="dna-zoom-status">Overview: trace the two sugar–phosphate backbones.</span></p>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>From helix to atoms</h3>
+          <p>A typical B-DNA helix has about 10.5 base pairs per turn, with adjacent base pairs separated by about 0.34 nm. One full helical pitch is therefore about 3.4 nm.</p>
+          <p>The individual bases are packed inside the helix, while the sugar–phosphate backbones are exposed toward the surrounding aqueous environment.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Complementarity</h3>
+          <p>A pairs with T in DNA and G pairs with C. Complementarity allows each strand to act as a template during replication and contributes to the fidelity of molecular recognition.</p>
+          <div class="mini-eq">A ↔ T &nbsp;&nbsp; G ≡ C</div>
+          <p>The number of hydrogen bonds is not the only source of stability: base stacking and the surrounding ionic environment are also important.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Why scale matters</h3>
+          <p>The diameter of B-DNA is only around 2 nm. That is far below the resolution of an ordinary optical microscope. The zoom visualization therefore changes scale dramatically so that individual molecular components can be discussed visually.</p>
+        </div>
+      </div>
+
+      <details class="deeper-dive">
+        <summary>Go deeper: how do we actually "see" a molecule this small? <span class="plus">+</span></summary>
+        <div class="dive-body">
+          <p><strong>The diffraction limit.</strong> Visible light has a wavelength of roughly 400–700 nm — hundreds of times larger than a DNA helix. Because a light microscope cannot resolve features smaller than about half the wavelength it uses (the Abbe diffraction limit), no ordinary optical microscope will ever show you an individual base pair, no matter how good the lens is. Seeing DNA's atomic structure required abandoning visible light entirely.</p>
+          <p><strong>X-ray crystallography, the original route.</strong> This is how the double helix itself was solved. X-rays have wavelengths comparable to atomic spacing (~0.1 nm), so firing them at a crystallised or fibre sample of DNA and recording the diffraction pattern — as Rosalind Franklin did to produce the celebrated "Photo 51" — encodes the atomic positions indirectly, to be reconstructed mathematically rather than viewed directly.</p>
+          <p><strong>Modern alternatives.</strong> Cryo-electron microscopy (cryo-EM) flash-freezes a sample and images it with electrons, whose much shorter wavelength permits atomic or near-atomic resolution without needing a crystal at all — a capability recognised by the 2017 Nobel Prize in Chemistry. Atomic force microscopy (AFM) instead drags a physical nanoscale probe across a surface, feeling out its topography one atom at a time. Every visualisation in this module is a stylised composite of what these techniques have revealed, not a live picture — nothing yet lets us watch a single DNA molecule the way this animation does.</p>
+        </div>
+      </details>
+  </section>
+
+  <!-- ============ STATION 5: MEMBRANE DIFFUSION ============ -->
+  <section class="station" id="station-membrane" data-accent="membrane" role="tabpanel" aria-labelledby="tab-membrane" style="--accent:var(--membrane)">
+    <div class="station-head">
+      <p class="eyebrow">station 05 · continuum physics · data fitting</p>
+      <h2>Membrane diffusion &amp; osmosis</h2>
+      <p>Fick's laws describe how a concentration gradient drives net particle flow toward equilibrium. Below, hundreds of particles random-walk between two chambers separated by a permeable membrane — this is real Brownian motion, not a canned animation — and the simulated concentration trace is fitted against the analytical prediction.</p>
+      <div class="field-quote">
+        <p>Everything that living things do can be understood in terms of the jigglings and wigglings of atoms.</p>
+        <cite>— Richard Feynman, <em>The Feynman Lectures on Physics</em></cite>
+      </div>
+    </div>
+
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <div class="eq-block">
+            J = −D (dC/dx)
+            <small>Fick's first law: flux J is proportional to the concentration gradient, driven "downhill"</small>
+          </div>
+          <p>For two well-mixed compartments linked by a permeable barrier, this reduces to a first-order relaxation: the concentration difference decays exponentially toward equilibrium.</p>
+          <div class="eq-block">
+            C(t) = C<sub>eq</sub> + (C₀ − C<sub>eq</sub>) e<sup>−kt</sup>
+            <small>k depends on membrane permeability and contact area — exactly the parameter this simulation lets you set and then measure back out</small>
+          </div>
+          <p>Run the simulation, then watch the graph: the live particle count is fitted with a least-squares exponential regression, and the recovered rate constant k is displayed — a genuine "simulate, then fit the model to the data" workflow.</p>
+          <div class="relevance">
+            <strong>Why it matters:</strong> this is the physics behind dialysis machines (diffusive clearance across a semi-permeable membrane), osmoregulation in the kidney's nephrons, and how small drugs cross the lipid bilayer of a cell.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="membrane-canvas"></canvas>
+          <div class="controls">
+            <div class="field">
+              <div class="field-row"><label for="mem-left">Initial left-chamber count</label><span class="val" id="mem-left-val">120</span></div>
+              <input type="range" id="mem-left" min="20" max="200" step="5" value="120" />
+            </div>
+            <div class="field">
+              <div class="field-row"><label for="mem-right">Initial right-chamber count</label><span class="val" id="mem-right-val">20</span></div>
+              <input type="range" id="mem-right" min="0" max="200" step="5" value="20" />
+            </div>
+            <div class="field">
+              <div class="field-row"><label for="mem-perm">Membrane permeability</label><span class="val" id="mem-perm-val">0.35</span></div>
+              <input type="range" id="mem-perm" min="0.02" max="1" step="0.01" value="0.35" />
+            </div>
+          </div>
+          <div class="sim-toolbar">
+            <button class="btn primary" id="mem-toggle">Start diffusion</button>
+            <button class="btn" id="mem-reset">Reset</button>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Left</div><div class="value" id="mem-left-count">120</div></div>
+            <div class="readout"><div class="label">Right</div><div class="value" id="mem-right-count">20</div></div>
+            <div class="readout"><div class="label">Ticks</div><div class="value" id="mem-ticks">0</div></div>
+            <div class="readout"><div class="label">Fitted k</div><div class="value" id="mem-k">—</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <p style="margin:0 0 6px; font-size:0.85rem; color:var(--text-dim);">Left-chamber count vs. time — simulated data (solid) vs. exponential fit (dashed)</p>
+          <canvas class="sim-canvas" id="membrane-graph" style="height:180px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>Brownian motion</h3>
+          <p>At microscopic scales, molecules are constantly kicked by surrounding solvent molecules. Their trajectories look random even though the underlying collisions obey ordinary statistical mechanics.</p>
+          <div class="mini-eq">⟨x²⟩ = 2Dt &nbsp; (1D Brownian diffusion)</div>
+          <p>The diffusion coefficient D summarizes how quickly a population spreads. Higher temperature generally increases molecular agitation, while larger drag tends to reduce diffusion.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Fick's laws</h3>
+          <div class="mini-eq">J = −D∇C<br>∂C/∂t = D∇²C</div>
+          <p>The minus sign means net diffusive flux points down a concentration gradient. Diffusion does not require particles to “know” where the lower concentration is; the net direction emerges statistically from random motion.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Membranes change the problem</h3>
+          <p>A biological membrane is not simply an empty wall. Its lipid core is relatively impermeable to ions and many polar molecules. Channels, carriers, and transporters can provide selective pathways.</p>
+          <p>The current simulator uses a simplified permeable barrier, so its crossing probability is not a complete model of a lipid bilayer or a membrane transporter.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Diffusion versus active transport</h3>
+          <p>Passive diffusion moves down a chemical potential gradient. Active transport can move substances against their gradient by coupling transport to an energy source such as ATP hydrolysis or another ion gradient.</p>
+          <ul>
+            <li>Passive: no external energy input is required.</li>
+            <li>Facilitated diffusion: passive movement through a protein pathway.</li>
+            <li>Primary active transport: directly coupled to a chemical energy source.</li>
+            <li>Secondary active transport: powered by another stored electrochemical gradient.</li>
+          </ul>
+        </div>
+      </div>
+
+      <details class="deeper-dive">
+        <summary>Go deeper: osmosis, and why cells don't just burst <span class="plus">+</span></summary>
+        <div class="dive-body">
+          <p><strong>Osmosis is diffusion of water, not solute.</strong> When a membrane is permeable to water but not to a dissolved solute, water itself diffuses from the side with more free water molecules (lower solute concentration) toward the side with less (higher solute concentration) — this is osmosis, and it is governed by exactly the same statistical logic as the particle simulation above, just applied to the solvent instead of the solute.</p>
+          <p><strong>Cells actively manage this.</strong> A red blood cell placed in pure water will swell and can lyse (burst), because water rushes in down its own concentration gradient while the cell has no rigid wall to resist the pressure. Plant cells avoid this fate because a stiff cellulose cell wall generates counteracting turgor pressure; animal cells instead rely on ion pumps — especially the Na⁺/K⁺-ATPase — to actively hold intracellular solute concentration within a narrow range, so that osmotic water flow stays balanced.</p>
+          <p><strong>Where this shows up in medicine.</strong> Intravenous fluids are formulated to be isotonic with blood plasma for exactly this reason — an IV bag of pure water would cause the very lysis described above. Osmotic principles also underlie how the kidney concentrates urine, how dialysis removes waste from blood, and why saltwater is undrinkable: seawater is hypertonic to human cells, so drinking it would draw water out of your tissues rather than hydrating them.</p>
+        </div>
+      </details>
+  </section>
+
+
+  <!-- ============ STATION 6: KINESIN TRANSPORT ============ -->
+  <section class="station" id="station-kinesin" data-accent="protein" role="tabpanel" aria-labelledby="tab-kinesin" style="--accent:var(--motor)">
+    <div class="station-head">
+      <p class="eyebrow">station 06 · non-equilibrium statistical mechanics</p>
+      <h2>Molecular motors &amp; thermal ratchets</h2>
+      <p>Kinesin converts chemical free energy from ATP hydrolysis into directed stepping along a microtubule. At cellular length scales inertia is negligible, while thermal fluctuations are large, so a motor must continually bias stochastic motion rather than simply “push through” Brownian noise.</p>
+      <div class="field-quote">
+        <p>There's plenty of room at the bottom.</p>
+        <cite>— Richard Feynman, lecture to the American Physical Society, 1959</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <p>This is a phenomenological motor model, not an atomistic kinesin simulation. ATP availability sets the chemical cycle rate; an opposing load reduces forward stepping; temperature increases thermal jitter.</p>
+          <div class="eq-block">
+            v(F) = v<sub>max</sub> · [1 − (F/F<sub>stall</sub>)<sup>η</sup>], &nbsp; 0 ≤ F ≤ F<sub>stall</sub>
+            <small>an illustrative force–velocity curve; real kinesin force–velocity relations depend on nucleotide state, load direction, and stepping kinetics</small>
+          </div>
+          <div class="relevance">
+            <strong>Physics:</strong> the motor rectifies thermal fluctuations using chemical energy, so the process is intrinsically non-equilibrium. <strong>Biology:</strong> kinesin transports vesicles and other cargo along microtubules, including long-distance transport in neurons.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="kinesin-canvas" aria-label="Animated kinesin stepping along a microtubule"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="kin-atp">ATP concentration (relative)</label><span class="val" id="kin-atp-val">1.00</span></div><input type="range" id="kin-atp" min="0.05" max="2" step="0.01" value="1"/></div>
+            <div class="field"><div class="field-row"><label for="kin-load">Opposing load</label><span class="val" id="kin-load-val">0.0 pN</span></div><input type="range" id="kin-load" min="0" max="8" step="0.1" value="0"/></div>
+            <div class="field"><div class="field-row"><label for="kin-temp">Temperature</label><span class="val" id="kin-temp-val">300 K</span></div><input type="range" id="kin-temp" min="250" max="340" step="1" value="300"/></div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Velocity</div><div class="value" id="kin-v">0</div></div>
+            <div class="readout"><div class="label">Step rate</div><div class="value" id="kin-rate">0</div></div>
+            <div class="readout"><div class="label">Step size</div><div class="value">8 nm</div></div>
+            <div class="readout"><div class="label">Efficiency*</div><div class="value" id="kin-eff">—</div></div>
+          </div>
+          <p class="hint">*Efficiency is a toy estimate of useful mechanical work per assumed 20 kBT chemical-energy budget; it is not a biochemical measurement.</p>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>What kinesin is</h3>
+          <p>Kinesins are ATP-powered motor proteins that interact with microtubules. A conventional kinesin-1 motor has two motor domains connected to a stalk and cargo-binding region. The two heads coordinate their interactions with the microtubule and nucleotide state.</p>
+          <p>Many kinesins move toward the microtubule plus end, although kinesin families with different directionality and functions also exist.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Why Brownian motion is not just “noise”</h3>
+          <p>At nanometer scales, thermal fluctuations are unavoidable. A motor cannot behave like a miniature macroscopic engine with inertia carrying it forward. Instead, ATP-driven conformational changes bias the probability of forward and backward transitions through a sequence of molecular states.</p>
+          <div class="mini-eq">chemical free energy → altered transition rates → biased stochastic stepping</div>
+        </div>
+        <div class="depth-card">
+          <h3>Low Reynolds number physics</h3>
+          <p>For microscopic objects in water, viscous drag dominates inertia. A useful dimensionless measure is the Reynolds number:</p>
+          <div class="mini-eq">Re = ρvL / μ</div>
+          <p>For cellular-scale motion, Re is typically extremely small. If the motor stops exerting force, it does not coast for long; viscous drag damps momentum almost immediately.</p>
+        </div>
+        <div class="depth-card">
+          <h3>ATP and stepping</h3>
+          <p>ATP binding, hydrolysis, and product release alter the conformational landscape of the motor. The exact mechanochemical cycle is more complicated than “one ATP equals one simple push.” The relationship between ATP concentration and velocity can also saturate.</p>
+          <p>The simulator therefore uses ATP as a control on the effective stepping rate rather than pretending to reproduce every biochemical intermediate.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Load and force–velocity behavior</h3>
+          <p>An opposing force makes forward transitions less favorable and can increase backward stepping or detachment. Real force–velocity curves are experimentally measured and can deviate substantially from a simple power law.</p>
+          <div class="mini-eq">v(F) = v<sub>max</sub>[1 − (F/F<sub>stall</sub>)<sup>η</sup>] &nbsp; (illustrative)</div>
+        </div>
+        <div class="depth-card">
+          <h3>Biological importance</h3>
+          <ul>
+            <li>Long-range transport in neurons is essential because axons can be very long.</li>
+            <li>Kinesins move vesicles, protein complexes, organelles, and other cargo.</li>
+            <li>Motor proteins work alongside dyneins and myosins in different cellular transport systems.</li>
+            <li>Microtubules act as polarized tracks, giving directionality to many transport processes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <details class="deeper-dive">
+        <summary>Go deeper: how do we know kinesin actually walks? <span class="plus">+</span></summary>
+        <div class="dive-body">
+          <p><strong>Discovering the motor.</strong> Kinesin was identified in 1985 by Ronald Vale, Michael Sheetz, and Thomas Reese, who were investigating fast axonal transport in squid giant axons — the same accessible neurons that Hodgkin and Huxley used for the next module. It took another decade of single-molecule biophysics, using optical traps and fluorescently labelled motors on glass-mounted microtubules, to establish that kinesin moves in discrete 8-nanometre steps — the exact spacing of one tubulin dimer along the microtubule track — rather than sliding continuously.</p>
+          <p><strong>"Hand-over-hand" walking.</strong> Kinesin is a dimer with two motor heads. Single-molecule tracking (Yildiz et al., 2004, using a technique that localises a single fluorophore to nanometre precision) showed the two heads alternate leading and trailing roles exactly like a biped walking — one head releases and swings 16 nm forward while the other stays bound to the track, rather than both heads inching forward together. This is why the force–velocity model in the panel above treats stepping as a discrete, biased random process rather than smooth continuous motion.</p>
+          <p><strong>Why "Brownian ratchet," not "engine."</strong> A car engine converts fuel into directed force that then pushes the car forward through inertia. Kinesin cannot do this — at the nanoscale, viscous drag would erase any inertial coasting within nanoseconds. Instead, ATP hydrolysis is thought to work as a ratchet: it does not directly shove the motor forward, but it changes which of the random thermal fluctuations already jostling the head are allowed to be "locked in" as forward progress versus reversed. This is the essence of a Brownian ratchet, and it's the same principle proposed to explain other unidirectional molecular processes, from muscle contraction to protein translocation through pores.</p>
+        </div>
+      </details>
+  </section>
+
+  <!-- ============ STATION 7: HODGKIN–HUXLEY ============ -->
+<div class="experiment-runner" data-runner="kin">
+  <div><strong>Experiment run</strong><span>Set ATP, load, and temperature, then restart the motor.</span></div>
+  <div class="experiment-runner-actions"><button class="btn primary" id="kin-run" type="button">Run motor</button><span class="experiment-status" id="kin-run-status" role="status">Ready</span></div>
+</div>
+
+
+<section class="station" id="station-hh" data-accent="dna" role="tabpanel" aria-labelledby="tab-hh" style="--accent:var(--hh)">
+    <div class="station-head">
+      <p class="eyebrow">station 07 · nonlinear electrophysiology</p>
+      <h2>Hodgkin–Huxley neuronal firing</h2>
+      <p>The membrane behaves like a capacitor in parallel with voltage-dependent Na<sup>+</sup>, K<sup>+</sup>, and leak conductances. The coupled gating variables create the nonlinear feedback that produces an action potential.</p>
+      <div class="field-quote">
+        <p>The brain becomes an enchanted loom where millions of flashing shuttles weave a dissolving pattern.</p>
+        <cite>— Charles Sherrington, neurophysiologist, <em>Man on His Nature</em>, 1942</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <div class="eq-block">
+            I<sub>ext</sub> = C<sub>m</sub>dV/dt + g<sub>Na</sub>m<sup>3</sup>h(V−E<sub>Na</sub>) + g<sub>K</sub>n<sup>4</sup>(V−E<sub>K</sub>) + g<sub>L</sub>(V−E<sub>L</sub>)
+            <small>equivalently, C<sub>m</sub>dV/dt = I<sub>ext</sub> − I<sub>ion</sub>; m, h, n obey voltage-dependent first-order kinetics</small>
+          </div>
+          <p>The simulation uses the classical 1952 Hodgkin–Huxley parameter set. Nernst potentials are updated from the chosen extracellular concentrations using a temperature-adjusted Nernst relation; the TTX control removes the Na conductance.</p>
+          <div class="relevance">
+            <strong>Biology:</strong> Na<sup>+</sup> activation rapidly depolarizes the membrane, while delayed K<sup>+</sup> activation repolarizes it. <strong>Physics:</strong> the membrane capacitance stores charge and the ion currents discharge it.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="hh-canvas" aria-label="Hodgkin-Huxley membrane voltage and channel dynamics"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="hh-current">Injection current</label><span class="val" id="hh-current-val">10.0 µA/cm²</span></div><input type="range" id="hh-current" min="0" max="30" step="0.5" value="10"/></div>
+            <div class="field"><div class="field-row"><label for="hh-na">Extracellular Na<sup>+</sup></label><span class="val" id="hh-na-val">145 mM</span></div><input type="range" id="hh-na" min="50" max="200" step="1" value="145"/></div>
+            <div class="field"><div class="field-row"><label for="hh-k">Extracellular K<sup>+</sup></label><span class="val" id="hh-k-val">5 mM</span></div><input type="range" id="hh-k" min="2" max="20" step="0.5" value="5"/></div>
+            <div class="field-row"><label for="hh-ttx">TTX: block Na<sup>+</sup></label><input type="checkbox" id="hh-ttx"/></div>
+          </div>
+          <div class="sim-toolbar"><button class="btn" id="hh-reset" type="button">Reset trace</button><button class="btn" id="hh-pause" type="button">Pause</button></div>
+          <div class="readouts">
+            <div class="readout"><div class="label">V<sub>m</sub></div><div class="value" id="hh-v">−65.0 mV</div></div>
+            <div class="readout"><div class="label">g<sub>Na</sub></div><div class="value" id="hh-gna">0.00</div></div>
+            <div class="readout"><div class="label">g<sub>K</sub></div><div class="value" id="hh-gk">0.00</div></div>
+            <div class="readout"><div class="label">Spikes</div><div class="value" id="hh-spikes">0</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>The membrane as an electrical circuit</h3>
+          <p>The lipid bilayer separates charge and behaves approximately like a capacitor. Ion channels provide conductances in parallel with that capacitance. The membrane voltage changes when ionic currents charge or discharge the capacitor.</p>
+          <div class="mini-eq">C<sub>m</sub> dV/dt = I<sub>ext</sub> − Σ I<sub>ion</sub></div>
+        </div>
+        <div class="depth-card">
+          <h3>Where the reversal potentials come from</h3>
+          <p>For a single ion, the Nernst equation gives the equilibrium voltage at which electrical and chemical driving forces balance.</p>
+          <div class="mini-eq">E<sub>ion</sub> = (RT/zF) ln([ion]<sub>out</sub>/[ion]<sub>in</sub>)</div>
+          <p>The Goldman–Hodgkin–Katz framework extends this idea to multiple permeant ions and their relative permeabilities.</p>
+        </div>
+        <div class="depth-card">
+          <h3>The four HH variables</h3>
+          <ul>
+            <li><strong>m:</strong> activation of the Na<sup>+</sup> conductance.</li>
+            <li><strong>h:</strong> inactivation of the Na<sup>+</sup> conductance.</li>
+            <li><strong>n:</strong> activation of the K<sup>+</sup> conductance.</li>
+            <li><strong>V:</strong> membrane potential.</li>
+          </ul>
+          <p>Because these variables respond on different timescales, the system produces a rapid inward Na<sup>+</sup> current followed by a delayed outward K<sup>+</sup> current.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Action-potential sequence</h3>
+          <p>A sufficiently strong depolarization activates Na<sup>+</sup> channels. Na<sup>+</sup> entry drives further depolarization, creating positive feedback. Na<sup>+</sup> channels then inactivate while K<sup>+</sup> conductance rises, producing repolarization and often a brief after-hyperpolarization.</p>
+          <p>This is an example of a nonlinear excitable system: a small input below threshold can fade away, while an input beyond threshold can trigger a large stereotyped response.</p>
+        </div>
+        <div class="depth-card">
+          <h3>What TTX teaches</h3>
+          <p>Tetrodotoxin blocks many voltage-gated Na<sup>+</sup> channels. In the model, setting TTX on removes the Na conductance. This demonstrates why the rapid inward Na<sup>+</sup> current is central to the classical action potential.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Limits of the model</h3>
+          <p>The original HH model was built from measurements in squid giant axon and is not a universal model of every neuron. Real cells can contain many more channel types, calcium dynamics, dendrites, spatial effects, synapses, and intracellular signaling pathways.</p>
+        </div>
+      </div>
+
+      <details class="deeper-dive">
+        <summary>Go deeper: the squid axon experiment that made this model possible <span class="plus">+</span></summary>
+        <div class="dive-body">
+          <p><strong>Why a squid?</strong> Alan Hodgkin and Andrew Huxley worked out this model between 1939 and 1952 using the giant axon of the Atlantic squid, which can be nearly 1 mm in diameter — roughly 100 times wider than a typical mammalian axon. That size was the whole point: it was wide enough for them to thread a fine wire electrode down its centre, something impossible in almost any other neuron available at the time, which is what let them measure and control membrane voltage directly.</p>
+          <p><strong>The voltage clamp.</strong> Their key technique, developed with Kenneth Cole, held membrane voltage artificially fixed at chosen levels while measuring the current needed to hold it there — decoupling voltage from current let them isolate the individual sodium and potassium conductances that appear as separate terms in the equation above. Publishing a full quantitative, testable model of an excitable membrane from this data was itself a landmark: it let them predict the shape, threshold, and propagation speed of the action potential entirely from the four coupled differential equations, years before anyone could see an ion channel directly.</p>
+          <p><strong>Recognition.</strong> Hodgkin and Huxley shared the 1963 Nobel Prize in Physiology or Medicine (with John Eccles) for this work. It took until the 1970s and 80s — with the invention of the patch-clamp technique by Erwin Neher and Bert Sakmann (Nobel Prize, 1991) — for anyone to directly measure the current flowing through a single ion channel and confirm that discrete protein channels, not a continuous membrane property, were what the m, h, and n variables had been describing all along.</p>
+        </div>
+      </details>
+  </section>
+
+  <!-- ============ STATION 8: ATP SYNTHASE ============ -->
+  <section class="station" id="station-atp" data-accent="membrane" role="tabpanel" aria-labelledby="tab-atp" style="--accent:var(--membrane)">
+    <div class="station-head">
+      <p class="eyebrow">station 08 · electrochemical energy conversion</p>
+      <h2>Rotary nanomotor &amp; chemiosmosis</h2>
+      <p>ATP synthase couples proton flow through F<sub>0</sub> to rotation of its rotor and conformational cycling in F<sub>1</sub>. The proton-motive force combines the electrical membrane potential and the pH gradient.</p>
+      <div class="field-quote">
+        <p>Life is nothing but an electron looking for a place to rest.</p>
+        <cite>— Albert Szent-Györgyi, biochemist, Nobel laureate (1937), attributed</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <div class="eq-block">
+            Δp = Δψ − (2.303RT/F)ΔpH
+            <small>sign depends on the chosen inside/outside convention; here Δψ = ψ<sub>in</sub>−ψ<sub>out</sub> and ΔpH = pH<sub>in</sub>−pH<sub>out</sub></small>
+          </div>
+          <p>The simulation treats the motor as a coarse-grained torque balance. It uses a proton-motive-force magnitude, a configurable rotor stoichiometry, and a load torque to estimate angular speed and ATP production.</p>
+          <div class="relevance">
+            <strong>Important correction:</strong> ATP synthase does not literally make ATP “from ADP” by a simple one-step reaction. It couples proton-driven mechanical rotation and conformational changes to <strong>ADP + P<sub>i</sub> → ATP</strong>. The H<sup>+</sup>/ATP ratio varies with the c-ring stoichiometry and organism.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas" id="atp-canvas" aria-label="Rotating ATP synthase rotor driven by protons"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="atp-dph">ΔpH (inside − outside)</label><span class="val" id="atp-dph-val">0.50</span></div><input type="range" id="atp-dph" min="0" max="2" step="0.01" value="0.5"/></div>
+            <div class="field"><div class="field-row"><label for="atp-dpsi">Δψ</label><span class="val" id="atp-dpsi-val">−150 mV</span></div><input type="range" id="atp-dpsi" min="-220" max="80" step="1" value="-150"/></div>
+            <div class="field"><div class="field-row"><label for="atp-load">Load torque</label><span class="val" id="atp-load-val">15 pN·nm</span></div><input type="range" id="atp-load" min="0" max="80" step="1" value="15"/></div>
+            <div class="field"><div class="field-row"><label for="atp-ring">c-ring subunits</label><span class="val" id="atp-ring-val">10</span></div><input type="range" id="atp-ring" min="8" max="14" step="1" value="10"/></div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">|Δp|</div><div class="value" id="atp-dp">— mV</div></div>
+            <div class="readout"><div class="label">Rotor speed</div><div class="value" id="atp-rpm">0 rpm</div></div>
+            <div class="readout"><div class="label">Torque</div><div class="value" id="atp-torque">0 pN·nm</div></div>
+            <div class="readout"><div class="label">ATP rate</div><div class="value" id="atp-rate">0 s⁻¹</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="topic-depth">
+        <div class="depth-card">
+          <h3>ATP synthase architecture</h3>
+          <p>ATP synthase has two coupled functional regions. F<sub>0</sub> is membrane-embedded and contains the proton-conducting pathway and rotating c-ring. F<sub>1</sub> projects into the aqueous compartment and contains the catalytic α<sub>3</sub>β<sub>3</sub> head plus the central shaft.</p>
+          <p>Proton flow drives rotation of the c-ring and central shaft. Rotation changes the conformations of catalytic β subunits, promoting ATP synthesis.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Proton-motive force</h3>
+          <div class="mini-eq">Δp = Δψ − (2.303RT/F)ΔpH</div>
+          <p>The electrical term Δψ and chemical term ΔpH together determine the electrochemical driving force for proton movement. Sign conventions vary between textbooks, so the inside/outside definition must always be stated.</p>
+        </div>
+        <div class="depth-card">
+          <h3>How proton flow becomes torque</h3>
+          <p>Protons bind to conserved acidic residues associated with the c-ring and are transferred through half-channels in the membrane-embedded stator. The resulting electrochemical transitions bias rotation of the ring.</p>
+          <p>The molecular mechanism is not a simple piston. It is a coordinated sequence of protonation, deprotonation, conformational changes, and electrostatic interactions.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Why the c-ring matters</h3>
+          <p>Each full revolution of the c-ring translocates approximately one proton per c-subunit, subject to the detailed mechanism. Therefore the c-ring stoichiometry influences the energetic cost per rotation and the effective H<sup>+</sup>/ATP ratio.</p>
+          <div class="mini-eq">H<sup>+</sup>/full rotation ≈ c-ring subunits</div>
+          <p>The catalytic F<sub>1</sub> sector produces approximately three ATP per full rotation in the canonical rotary mechanism, though biological systems have additional energetic and stoichiometric details.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Torque, load, and speed</h3>
+          <p>A motor under load reaches a speed determined by the balance between driving torque and resisting torque. Increasing the proton-motive force can increase the available driving work, while a larger opposing torque slows the rotor.</p>
+          <p>The simulator uses a deliberately simplified torque balance, so its RPM should be interpreted as a visualization of trends rather than a calibrated measurement for one ATP synthase.</p>
+        </div>
+        <div class="depth-card">
+          <h3>Cellular energy production</h3>
+          <p>In mitochondria, the respiratory chain builds a proton electrochemical gradient across the inner mitochondrial membrane. ATP synthase uses that stored electrochemical free energy to synthesize ATP from ADP and inorganic phosphate.</p>
+          <ul>
+            <li>Electron transport → proton pumping.</li>
+            <li>Proton gradient → electrochemical potential.</li>
+            <li>F<sub>0</sub> proton flow → rotor rotation.</li>
+            <li>Rotation → F<sub>1</sub> conformational cycling.</li>
+            <li>Conformational cycling → ATP synthesis.</li>
+          </ul>
+        </div>
+      </div>
+  </section>
+<div class="experiment-runner" data-runner="atp">
+  <div><strong>Experiment run</strong><span>Set proton motive force and load, then restart the rotor.</span></div>
+  <div class="experiment-runner-actions"><button class="btn primary" id="atp-run" type="button">Run rotor</button><span class="experiment-status" id="atp-run-status" role="status">Ready</span></div>
+</div>
+
+
+<section class="station" id="station-plants" data-accent="plant" role="tabpanel" aria-labelledby="tab-plants" style="--accent:var(--plant)">
+    <div class="station-head">
+      <p class="eyebrow">syllabus topic 7 · plant transport</p>
+      <h2>Transpiration Lab</h2>
+      <p>Water rises through xylem because evaporation at the leaf creates tension in a continuous column of water. Cohesion between water molecules and adhesion to xylem walls help transmit that hydrostatic pressure gradient from leaf to root.</p>
+      <div class="field-quote">
+        <p>The tip of the radicle... acts like the brain of one of the lower animals.</p>
+        <cite>— Charles Darwin, <em>The Power of Movement in Plants</em>, 1880</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">The physical model</h3>
+          <p>At a leaf surface, warmer and drier air makes it easier for water molecules to escape. Wind removes humid boundary-layer air, while light opens stomata. The result is a stronger water-potential gradient and faster mass flow from the potometer.</p>
+          <div class="eq-block">water potential: Ψ = Ψ<sub>s</sub> + Ψ<sub>p</sub><small>Transpiration lowers leaf water potential; pressure tension then pulls the xylem column upward.</small></div>
+          <div class="relevance"><strong>Try it:</strong> increase temperature and wind while decreasing humidity. The virtual water bubble moves faster as evaporation increases.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Cohesion and adhesion</h3><p>Hydrogen bonds provide cohesion between water molecules. Adhesion to the hydrophilic xylem wall helps maintain a continuous column against gravity.</p></div>
+          <div class="depth-card"><h3>Xylem and phloem</h3><p>Xylem mainly carries water and mineral ions under negative pressure. Phloem moves dissolved sugars by pressure-driven mass flow from sources to sinks.</p></div>
+          <div class="depth-card"><h3>The cohesion–tension theory</h3><p>Proposed independently by Henry Dixon and John Joly around 1894, this remains the accepted explanation for how trees move water tens of metres upward without a pump. It relies on water's unusually high tensile strength — for a continuous column with no air bubbles, cohesive hydrogen bonding lets it be pulled (not pushed) like a solid rope, sustaining tensions of several atmospheres below vacuum without breaking.</p></div>
+          <div class="depth-card"><h3>Why cavitation is the danger, not gravity</h3><p>The real engineering limit on tree height is not lifting water against gravity — it's avoiding cavitation, where dissolved gas nucleates a bubble inside the tension column and breaks it, exactly like snapping a stretched rope. Drought-stressed trees can suffer "embolism" for this reason, and many species have narrow, redundant xylem vessels specifically to contain any given cavitation event to a small part of the plant.</p></div>
+        </div>
+
+        <details class="deeper-dive">
+          <summary>Go deeper: stomata as a cost–benefit trade-off <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>Every stoma a plant opens to let CO₂ in for photosynthesis is also a hole that lets water vapour out — transpiration is, from the plant's perspective, largely an unavoidable side effect of gas exchange, not an end in itself. A single large maize plant can transpire over 200 litres of water across a growing season, of which typically well under 1% is retained for growth; essentially all of it evaporates.</p>
+            <p>Guard cells around each stoma respond to light, CO₂ concentration, and internal water status by changing turgor pressure, opening or closing the pore. This creates the constant trade-off the sliders in this module let you explore: more open stomata means faster photosynthesis but also faster water loss, which is why many desert and drought-adapted plants (CAM plants such as cacti) open their stomata only at night, when it's cooler and more humid, storing CO₂ chemically until daylight makes photosynthesis possible without the pore staying open.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas lab-canvas" id="plant-canvas" aria-label="Plant potometer and water uptake graph"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="plant-wind">Wind speed</label><span class="val" id="plant-wind-val">2.0 m/s</span></div><input type="range" id="plant-wind" min="0" max="10" step=".5" value="2"></div>
+            <div class="field"><div class="field-row"><label for="plant-temp">Air temperature</label><span class="val" id="plant-temp-val">22 °C</span></div><input type="range" id="plant-temp" min="5" max="40" step="1" value="22"></div>
+            <div class="field"><div class="field-row"><label for="plant-humidity">Relative humidity</label><span class="val" id="plant-humidity-val">60%</span></div><input type="range" id="plant-humidity" min="10" max="100" step="1" value="60"></div>
+            <div class="field"><div class="field-row"><label for="plant-light">Light intensity</label><span class="val" id="plant-light-val">550 μmol m⁻² s⁻¹</span></div><input type="range" id="plant-light" min="0" max="1000" step="25" value="550"></div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Evaporation</div><div class="value" id="plant-rate">—</div></div>
+            <div class="readout"><div class="label">Leaf kinetic energy</div><div class="value" id="plant-ke">—</div></div>
+            <div class="readout"><div class="label">Potometer flow</div><div class="value" id="plant-flow">—</div></div>
+            <div class="readout"><div class="label">Xylem tension</div><div class="value" id="plant-tension">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<div class="experiment-runner" data-runner="plant">
+  <div><strong>Experiment run</strong><span>Change the environmental conditions, then recalculate transport.</span></div>
+  <div class="experiment-runner-actions"><button class="btn primary" id="plant-run" type="button">Run transport</button><span class="experiment-status" id="plant-run-status" role="status">Ready</span></div>
+</div>
+
+
+<section class="station" id="station-mammals" data-accent="cardiac" role="tabpanel" aria-labelledby="tab-mammals" style="--accent:var(--cardiac)">
+    <div class="station-head">
+      <p class="eyebrow">syllabus topic 8 · mammal transport</p>
+      <h2>Interactive Cardiac Cycle &amp; Bohr Effect</h2>
+      <p>Blood transport depends on pressure differences created by the heart. Oxygen loading also depends on partial pressure: carbon dioxide changes haemoglobin’s affinity for oxygen, shifting the dissociation curve.</p>
+      <div class="field-quote">
+        <p>The heart of animals is the foundation of their life, the sovereign of everything within them.</p>
+        <cite>— William Harvey, <em>De Motu Cordis</em>, 1628</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Pressure, volume, and gas exchange</h3>
+          <p>The left ventricle generates a pressure pulse that exceeds aortic pressure during systole. Elastic recoil helps sustain arterial pressure between beats. In tissues with higher pCO₂, haemoglobin releases oxygen more readily: the Bohr shift.</p>
+          <div class="eq-block">O₂ saturation = pO₂ⁿ / (P₅₀ⁿ + pO₂ⁿ)<small>A higher P₅₀ means lower oxygen affinity and a right-shifted curve.</small></div>
+          <div class="relevance"><strong>Try it:</strong> use the pCO₂ control. Higher CO₂ shifts the curve right, so saturation at a given pO₂ falls.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Cardiac cycle</h3><p>Atrial contraction fills the ventricle; ventricular systole closes the atrioventricular valve and ejects blood when ventricular pressure exceeds aortic pressure.</p></div>
+          <div class="depth-card"><h3>Partial pressure</h3><p>Gases diffuse down partial-pressure gradients. The haemoglobin curve is sigmoidal because binding is cooperative.</p></div>
+          <div class="depth-card"><h3>Why cooperative binding matters</h3><p>Each haemoglobin molecule carries four oxygen-binding sites, and binding at one site raises the affinity of the remaining sites — positive cooperativity. This is what makes the dissociation curve S-shaped rather than a simple hyperbola: haemoglobin loads oxygen very efficiently in the lungs (where pO₂ is high) while still releasing a large fraction of it in tissues (where pO₂ is much lower), a trade-off a non-cooperative carrier could not achieve nearly as well.</p></div>
+          <div class="depth-card"><h3>The Bohr effect at the molecular level</h3><p>Named for Christian Bohr (father of physicist Niels Bohr), the effect arises because CO₂ and H⁺ bind at sites on haemoglobin distinct from the oxygen pockets, stabilising the lower-affinity "tense" conformation. Actively respiring tissue produces more CO₂ and lactic acid, locally lowering pH — exactly where you want haemoglobin to release more oxygen. It is a beautifully self-regulating feedback loop: the tissue that needs oxygen most is the tissue that gets it fastest.</p></div>
+        </div>
+
+        <details class="deeper-dive">
+          <summary>Go deeper: why blood pressure is measured the way it is <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>A blood pressure reading of "120 over 80" reports systolic pressure (the peak during ventricular ejection) over diastolic pressure (the resting pressure between beats), both in mmHg — a unit inherited directly from the mercury column sphygmomanometers first used clinically in the early 1900s. The 40 mmHg gap between the two, the pulse pressure, reflects arterial elasticity: stiffened arteries in atherosclerosis produce a wider pulse pressure because the vessel can no longer absorb the systolic surge as effectively.</p>
+            <p>The pressure–volume loop this module animates is the same one cardiologists use to diagnose heart failure. Its enclosed area equals the mechanical work the ventricle performs each beat (stroke work); a heart that can't generate enough pressure for the same filling volume, or can't fill properly in the first place, shows up as a visibly abnormal loop shape long before other measurements change.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas lab-canvas" id="mammal-cardiac-canvas" aria-label="Heart contraction with left-heart pressure traces"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="mammal-rate">Heart rate</label><span class="val" id="mammal-rate-val">72 bpm</span></div><input type="range" id="mammal-rate" min="45" max="160" step="1" value="72"></div>
+            <div class="field"><div class="field-row"><label for="mammal-phase">Cardiac cycle position</label><span class="val" id="mammal-phase-val">0%</span></div><input type="range" id="mammal-phase" min="0" max="100" step="1" value="0"></div>
+            <div class="field"><div class="field-row"><label for="mammal-pco2">pCO₂</label><span class="val" id="mammal-pco2-val">40 mmHg</span></div><input type="range" id="mammal-pco2" min="20" max="80" step="1" value="40"></div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Aortic pressure</div><div class="value" id="mammal-aorta">—</div></div>
+            <div class="readout"><div class="label">LV pressure</div><div class="value" id="mammal-lv">—</div></div>
+            <div class="readout"><div class="label">P₅₀</div><div class="value" id="mammal-p50">—</div></div>
+            <div class="readout"><div class="label">O₂ at 40 mmHg</div><div class="value" id="mammal-sat">—</div></div>
+          </div>
+          <canvas class="sim-canvas" style="height:235px;margin-top:14px" id="mammal-bohr-canvas" aria-label="Oxygen haemoglobin dissociation curve"></canvas>
+          <div class="lab-legend"><span class="lab-key"><i class="lab-dot" style="background:#fb7185"></i>current pCO₂ curve</span><span class="lab-key"><i class="lab-dot" style="background:#60a5fa"></i>normal pCO₂ = 40 mmHg</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+<div class="experiment-runner" data-runner="mammal">
+  <div><strong>Experiment run</strong><span>Choose heart rate, cycle phase, and pCO₂, then restart the trace.</span></div>
+  <div class="experiment-runner-actions"><button class="btn primary" id="mammal-run" type="button">Run heartbeat</button><span class="experiment-status" id="mammal-run-status" role="status">Ready</span></div>
+</div>
+
+
+<section class="station" id="station-respiration" data-accent="photo" role="tabpanel" aria-labelledby="tab-respiration" style="--accent:var(--photo)">
+    <div class="station-head">
+      <p class="eyebrow">syllabus topic 12 · energy and respiration</p>
+      <h2>Chemiosmosis Proton Pump</h2>
+      <p>Respiration captures energy by using electron transfers to pump protons across the inner mitochondrial membrane. The resulting electrochemical gradient stores potential energy that ATP synthase converts into mechanical rotation and ATP.</p>
+      <div class="field-quote">
+        <p>Respiration is only a slow combustion of carbon and hydrogen.</p>
+        <cite>— Antoine Lavoisier, chemist, 1780s</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Stored electrochemical energy</h3>
+          <p>Electron transport chain complexes transfer electrons to oxygen and use the released energy to move H⁺ into the intermembrane space. Proton-motive force has both concentration and voltage components.</p>
+          <div class="eq-block">ΔG = nFΔp<small>Each proton moving down its electrochemical gradient can do work, including turning ATP synthase.</small></div>
+          <div class="relevance"><strong>Tap the electron chain</strong> to pump H⁺ upward. More accumulated protons strengthen the proton-motive force and accelerate the ATP synthase rotor.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Oxidative phosphorylation</h3><p>Electron transfer from NADH and FADH₂ to O₂ drives proton pumping. ATP synthase couples proton return to ADP + Pᵢ → ATP.</p></div>
+          <div class="depth-card"><h3>Substrate-level phosphorylation</h3><p>Some ATP is also made by direct phosphate transfer to ADP during glycolysis and the Krebs cycle, without the membrane gradient.</p></div>
+          <div class="depth-card"><h3>Why oxygen is the "final" acceptor</h3><p>Electrons cascade downhill through Complexes I–IV of the transport chain, each transfer releasing a little energy used to pump protons, in the same way water loses potential energy falling down a series of small steps rather than one cliff. Oxygen's exceptionally strong pull on electrons (high electronegativity) is what makes it thermodynamically capable of accepting them at the very bottom of that cascade — which is also exactly why cyanide, which blocks Complex IV from handing electrons to oxygen, is lethal: the whole chain backs up and proton pumping — and therefore ATP production — stops within minutes.</p></div>
+          <div class="depth-card"><h3>The yield question: why "about 30-38 ATP"?</h3><p>Older textbooks often state a fixed number of ATP per glucose; modern biochemistry treats this as an estimate, not an exact stoichiometry, because the proton-motive force is a shared, continuous energy currency rather than a discrete counted unit — the exact ATP yield depends on which shuttle system ferries electrons across the mitochondrial membrane, how "leaky" that membrane is to protons, and whether the proton gradient is diverted to other work, such as the heat-generating uncoupling proteins found in brown fat.</p></div>
+        </div>
+
+        <details class="deeper-dive">
+          <summary>Go deeper: Peter Mitchell's chemiosmotic hypothesis <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>Until the 1960s, the dominant assumption was that electron transport and ATP synthesis must be connected by a direct chemical intermediate, the way earlier-known energy-coupling reactions worked. Peter Mitchell proposed instead, in 1961, that the connection is purely electrochemical: electron transport pumps protons across an intact membrane, building a gradient, and a separate enzyme (ATP synthase) taps that stored gradient to make ATP — with no direct chemical bond between the two processes at all.</p>
+            <p>The hypothesis was controversial for over a decade, in part because it required an intact, sealed membrane to work — punch even a small hole in the membrane and the gradient collapses, along with any ATP production, exactly as this module's animation would predict. Mitchell was awarded the 1978 Nobel Prize in Chemistry once accumulating evidence, including direct demonstrations that an artificially imposed pH gradient alone (with no electron transport at all) was sufficient to drive ATP synthesis, confirmed he was right.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas lab-canvas" id="respiration-canvas" aria-label="Mitochondrial membrane electron transport and proton pump"></canvas>
+          <div class="sim-toolbar"><button class="btn primary" id="respiration-pump" type="button">Tap electron chain</button><button class="btn" id="respiration-reset" type="button">Reset gradient</button></div>
+          <div class="controls"><div class="field"><div class="field-row"><label for="respiration-oxygen">Oxygen availability</label><span class="val" id="respiration-oxygen-val">75%</span></div><input type="range" id="respiration-oxygen" min="10" max="100" step="5" value="75"></div></div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Pumped H⁺</div><div class="value" id="respiration-protons">0</div></div>
+            <div class="readout"><div class="label">Δp estimate</div><div class="value" id="respiration-pmf">0 mV</div></div>
+            <div class="readout"><div class="label">Rotor speed</div><div class="value" id="respiration-rpm">0 rpm</div></div>
+            <div class="readout"><div class="label">ATP formed</div><div class="value" id="respiration-atp">0</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="station" id="station-photosynthesis" data-accent="photo" role="tabpanel" aria-labelledby="tab-photosynthesis" style="--accent:var(--photo)">
+    <div class="station-head">
+      <p class="eyebrow">syllabus topic 13 · photosynthesis</p>
+      <h2>Limiting Factors Sandbox</h2>
+      <p>Photosynthesis converts photon energy into chemical energy. Its rate is limited by whichever required factor is in shortest supply: usable light, carbon dioxide, or suitable enzyme temperature.</p>
+      <div class="field-quote">
+        <p>Life and civilization will continue as long as the sun shines.</p>
+        <cite>— Giacomo Ciamician, photochemist, <em>Science</em>, 1912</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">From photons to glucose</h3>
+          <p>Chlorophyll absorbs mainly blue and red light. The light-dependent reactions generate ATP and NADPH; the Calvin cycle uses them to fix CO₂ into organic molecules. Increasing one input helps only until a different step becomes limiting.</p>
+          <div class="eq-block">E = hc / λ<small>Shorter-wavelength photons carry more energy, but absorption—not energy alone—determines photosynthetic usefulness.</small></div>
+          <div class="relevance"><strong>Find the bottleneck:</strong> change one knob at a time, then compare the graph. The reported limiting factor is the lowest of the four rate capacities.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Light-dependent stage</h3><p>Photosystems absorb photons, split water, and use electron transport to make ATP and NADPH. Oxygen is released from water.</p></div>
+          <div class="depth-card"><h3>Light-independent stage</h3><p>The Calvin cycle uses ATP, NADPH, and CO₂ to make triose phosphate. Enzyme-controlled steps have a temperature optimum.</p></div>
+          <div class="depth-card"><h3>Why green light is "wasted" — mostly</h3><p>Chlorophyll a and b absorb strongly in the blue (~430 nm) and red (~660 nm) regions but reflect most green light, which is why plants look green — it's the wavelength band they use least. Accessory pigments such as carotenoids extend the usable spectrum somewhat, but the fundamental limit is set by the energy gap needed to excite an electron in chlorophyll's ring structure without so much excess energy that it is simply lost as heat.</p></div>
+          <div class="depth-card"><h3>Blackman's law of limiting factors</h3><p>Frederick Blackman formalised the "limiting factor" logic this sandbox demonstrates back in 1905: when a process depends on several factors, its rate is set by whichever factor is scarcest, and increasing any other factor produces no further improvement until that bottleneck is relieved. It's the same logic behind Liebig's law of the minimum in agriculture (a crop's yield is capped by its scarcest nutrient, not its most abundant one) — a strikingly general pattern across biology.</p></div>
+        </div>
+
+        <details class="deeper-dive">
+          <summary>Go deeper: why C4 and CAM plants exist at all <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>The Calvin cycle's carbon-fixing enzyme, RuBisCO, has a problem: it can react with oxygen almost as readily as with CO₂, a wasteful side reaction called photorespiration that gets worse as temperature rises and stomata partially close to conserve water (concentrating O₂ relative to CO₂ inside the leaf). C4 plants such as maize and sugarcane evolved a biochemical CO₂ pump — fixing carbon first into a 4-carbon compound in outer mesophyll cells, then releasing concentrated CO₂ deep in bundle-sheath cells around RuBisCO, suppressing photorespiration almost entirely.</p>
+            <p>CAM plants (cacti, pineapple, many succulents) solve the same problem on a time axis instead of a spatial one: they open stomata and fix CO₂ only at night, when evaporative water loss is much lower, storing it as an acid until daylight drives the light reactions. Both strategies are, in effect, evolved answers to exactly the limiting-factor trade-offs this module lets you explore by hand.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas lab-canvas" id="photosynthesis-canvas" aria-label="Photosynthesis limiting factors rate graph"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="photo-wave">Light wavelength</label><span class="val" id="photo-wave-val">680 nm</span></div><input type="range" id="photo-wave" min="400" max="700" step="5" value="680"></div>
+            <div class="field"><div class="field-row"><label for="photo-light">Light intensity</label><span class="val" id="photo-light-val">650 μmol m⁻² s⁻¹</span></div><input type="range" id="photo-light" min="0" max="1200" step="25" value="650"></div>
+            <div class="field"><div class="field-row"><label for="photo-co2">CO₂ concentration</label><span class="val" id="photo-co2-val">420 ppm</span></div><input type="range" id="photo-co2" min="100" max="1200" step="20" value="420"></div>
+            <div class="field"><div class="field-row"><label for="photo-temp">Leaf temperature</label><span class="val" id="photo-temp-val">25 °C</span></div><input type="range" id="photo-temp" min="5" max="45" step="1" value="25"></div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Relative rate</div><div class="value" id="photo-rate">—</div></div>
+            <div class="readout"><div class="label">Limiting factor</div><div class="value" id="photo-limit">—</div></div>
+            <div class="readout"><div class="label">Photon energy</div><div class="value" id="photo-energy">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<div class="experiment-runner" data-runner="photo">
+  <div><strong>Experiment run</strong><span>Set wavelength, light, CO₂, and temperature, then recalculate the rate.</span></div>
+  <div class="experiment-runner-actions"><button class="btn primary" id="photo-run" type="button">Run photosynthesis</button><span class="experiment-status" id="photo-run-status" role="status">Ready</span></div>
+</div>
+
+
+<section class="station" id="station-control" data-accent="neural" role="tabpanel" aria-labelledby="tab-control" style="--accent:var(--neural)">
+    <div class="station-head">
+      <p class="eyebrow">syllabus topic 15 · control and coordination</p>
+      <h2>Action Potential Oscilloscope</h2>
+      <p>A neurone membrane acts like a capacitor separated by ion-selective conductances. A sufficiently strong stimulus opens voltage-gated Na⁺ channels; delayed K⁺ opening then returns the membrane towards its resting potential.</p>
+      <div class="field-quote">
+        <p>Any man could, if he were so inclined, be the sculptor of his own brain.</p>
+        <cite>— Santiago Ramón y Cajal, <em>Advice for a Young Investigator</em>, 1897</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Electrical signalling in a membrane</h3>
+          <p>At rest, ion gradients and selective permeability set a negative membrane potential. Depolarisation is regenerative because Na⁺ entry opens more Na⁺ channels. K⁺ conductance dominates the repolarisation and after-hyperpolarisation phases.</p>
+          <div class="eq-block">I = C<sub>m</sub> dV/dt<small>Membrane capacitance relates the net ionic current to the rate at which voltage changes.</small></div>
+          <div class="relevance"><strong>Apply a stimulus:</strong> if it crosses threshold, watch the oscilloscope trace and the Na⁺ / K⁺ gates switch in sequence.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Resting potential</h3><p>Ion concentration gradients and leak-channel permeability produce a resting voltage, commonly around −70 mV in a neurone.</p></div>
+          <div class="depth-card"><h3>Synaptic transmission</h3><p>At synapses, transmitter-gated ion channels create graded inputs. Their summed effect determines whether the axon initial segment reaches threshold.</p></div>
+          <div class="depth-card"><h3>All-or-nothing, but not really "nothing"</h3><p>Once a stimulus crosses threshold, the resulting action potential has a fixed amplitude regardless of how far past threshold the stimulus went — this is the all-or-nothing law. But information about stimulus intensity isn't lost: it's re-encoded as firing <em>frequency</em> instead of spike size, which is why a bright light or a loud sound produces faster-firing action potentials, all of identical height, rather than bigger ones.</p></div>
+          <div class="depth-card"><h3>Saltatory conduction and myelin</h3><p>In myelinated axons, the fatty myelin sheath insulates the membrane except at small gaps (nodes of Ranvier), forcing the action potential to effectively "jump" node to node rather than regenerate continuously along the whole membrane. This can increase conduction velocity roughly tenfold over an unmyelinated axon of the same diameter, which is why demyelinating diseases such as multiple sclerosis produce such pronounced neurological symptoms — signal conduction slows or fails even though the underlying Hodgkin–Huxley machinery is intact.</p></div>
+        </div>
+
+        <details class="deeper-dive">
+          <summary>Go deeper: reflex arcs and coordination beyond one neuron <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>A single action potential, of the kind this oscilloscope generates, is only the basic signalling unit. Coordinated behaviour — like a reflex arc — chains several of these together: a sensory receptor transduces a stimulus into a graded receptor potential, which if large enough triggers action potentials along a sensory neuron, crosses one or more synapses in the spinal cord (often without needing to reach the brain at all, which is why reflexes are so fast), and finally triggers action potentials down a motor neuron to a muscle.</p>
+            <p>Each synaptic crossing in that chain introduces a brief delay and a point where the signal can be amplified, filtered, or blocked — which is exactly why synapses, not axons, are the primary site of action for most drugs that affect the nervous system, from local anaesthetics (which block voltage-gated Na⁺ channels directly, similar to the TTX effect explored in the Hodgkin–Huxley module) to antidepressants and neuromuscular blockers.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas lab-canvas" id="control-canvas" aria-label="Oscilloscope-style action potential monitor"></canvas>
+          <div class="controls"><div class="field"><div class="field-row"><label for="control-stimulus">Stimulus strength</label><span class="val" id="control-stimulus-val">18 μA</span></div><input type="range" id="control-stimulus" min="0" max="30" step="1" value="18"></div></div>
+          <div class="sim-toolbar"><button class="btn primary" id="control-fire" type="button">Apply stimulus</button><button class="btn" id="control-reset" type="button">Reset trace</button></div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Membrane voltage</div><div class="value" id="control-voltage">−70 mV</div></div>
+            <div class="readout"><div class="label">Na⁺ channels</div><div class="value" id="control-na">closed</div></div>
+            <div class="readout"><div class="label">K⁺ channels</div><div class="value" id="control-k">closed</div></div>
+            <div class="readout"><div class="label">State</div><div class="value" id="control-state">resting</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="station" id="station-ai-nerve" data-accent="neural" role="tabpanel" aria-labelledby="tab-ai-nerve" style="--accent:var(--neural)">
+    <div class="station-head">
+      <p class="eyebrow">syllabus topic 15 extension · comparative nervous systems &amp; evolution</p>
+      <h2>AI Virtual Dissection</h2>
+      <p>Every nervous system on the syllabus runs on the same Hodgkin–Huxley electrochemistry, but animals wrap wildly different anatomy — and evolutionary history — around it. Type or pick an animal and an AI model lays out its nervous system on a simplified body outline, "dissects" it open for you structure by structure, and places it on a simplified evolutionary tree.</p>
+      <div class="field-quote">
+        <p>The mysterious butterflies of the soul.</p>
+        <cite>— Santiago Ramón y Cajal, describing neurons, <em>Recollections of My Life</em>, 1917</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">One equation, many nervous systems</h3>
+          <p>The Hodgkin–Huxley station showed how one membrane's Na⁺ and K⁺ conductances generate a single action potential. Every animal nervous system on Earth runs on that same basic electrochemistry — what differs enormously between species is the anatomy wrapped around it: axon diameter, whether myelin is present, and how neurons are wired into a nerve net, a ganglionated cord, or a centralised brain and spinal cord. A real dissection is how biologists actually see that wiring; this module builds a simplified, labelled stand-in for one.</p>
+          <div class="eq-block">v ≈ k·√d <span style="opacity:.55">(unmyelinated)</span> &nbsp;vs&nbsp; v ≈ k′·d <span style="opacity:.55">(myelinated, saltatory)</span><small>Conduction velocity v scales with only the square root of axon diameter d in an unmyelinated fibre, but roughly linearly with d once saltatory conduction is possible — which is why a myelinated vertebrate axon can be far narrower than an invertebrate giant axon and still conduct faster.</small></div>
+          <div class="relevance"><strong>Try it:</strong> pick a preset animal or type your own, then press "Begin dissection" — the AI places the major nervous-system structures on a simplified body outline, and the scalpel line on the right sweeps across to reveal them, numbered to match the key underneath.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Nerve nets</h3><p>Cnidarians — jellyfish, <em>Hydra</em>, sea anemones — have no brain or ganglia at all, just a diffuse net of interconnected neurons through the body wall, giving slow, often non-directional conduction.</p></div>
+          <div class="depth-card"><h3>Ganglionated cords</h3><p>Annelids and insects run a chain of segmental ganglia along a ventral nerve cord, with occasional wide "giant fibres" reserved for fast escape reflexes.</p></div>
+          <div class="depth-card"><h3>Giant axons</h3><p>Never having evolved myelin, invertebrates such as the squid and earthworm independently hit on the same trick: make the axon itself enormous to cut internal resistance and speed conduction.</p></div>
+          <div class="depth-card"><h3>Myelination</h3><p>Vertebrates insulate axons in myelin so the impulse jumps node to node. That buys high conduction velocity from a much narrower axon, packing far more fibres into the same nerve.</p></div>
+          <div class="depth-card"><h3>Cephalisation</h3><p>Bilateral symmetry gives an animal a reliable direction of travel, which favours concentrating sense organs and neurons at the leading end — the first evolutionary step toward a head, and eventually a brain.</p></div>
+          <div class="depth-card"><h3>Convergent brains</h3><p>Complex, learning-capable brains evolved at least twice, completely independently: once in vertebrates, and once in cephalopods, whose last common ancestor with us was a simple, brainless worm-like animal over 500 million years ago.</p></div>
+        </div>
+        <details class="deeper-dive">
+          <summary>Go deeper: how the AI dissection works, and its limits <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>Pressing "Begin dissection" sends your chosen animal to a Claude language model with instructions to return a body-plan category, a short list of major nervous-system structures with approximate positions, the same kind of axon parameters used in the Hodgkin–Huxley station, and a one-sentence evolutionary note. The body outline itself is one of a handful of hand-drawn generic templates (a bilaterian vertebrate, an insect, a segmented worm, a cephalopod, a jellyfish's bell) — it is a schematic diagram, not species-accurate anatomical art, in the same spirit as a labelled worksheet you'd get before an actual dissection. The body-plan category also lights up a node on the simplified evolutionary tree beneath the dissection, so you can see roughly where that lineage sits.</p>
+            <p>Treat every structure and figure this produces as an informed teaching aid, not a citable data point — a language model can be wrong, real anatomy is far more detailed than five or six labelled points, and for many obscure species no precise measurement exists in the literature at all. If the live AI call can't be reached (for example, if this page has been saved and opened outside Claude.ai), the tool falls back to a small built-in reference dataset and a simple offline classifier instead, both clearly labelled as such.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Dissect any animal's nervous system</h3>
+          <div class="controls">
+            <div class="field">
+              <div class="field-row"><label for="ai-nerve-input">Animal (type any, or pick a preset)</label></div>
+              <input type="text" id="ai-nerve-input" maxlength="60" value="Human motor neurone" placeholder="e.g. bottlenose dolphin, octopus, tapeworm…" />
+            </div>
+          </div>
+          <div class="animal-chips">
+            <button class="animal-chip" type="button" data-animal="Human motor neurone" aria-pressed="true">Human motor neurone</button>
+            <button class="animal-chip" type="button" data-animal="Human C-fibre (pain)" aria-pressed="false">Human C-fibre</button>
+            <button class="animal-chip" type="button" data-animal="Squid giant axon" aria-pressed="false">Squid giant axon</button>
+            <button class="animal-chip" type="button" data-animal="Earthworm giant fibre" aria-pressed="false">Earthworm</button>
+            <button class="animal-chip" type="button" data-animal="Locust giant fibre" aria-pressed="false">Locust</button>
+            <button class="animal-chip" type="button" data-animal="Jellyfish nerve net" aria-pressed="false">Jellyfish</button>
+            <button class="animal-chip" type="button" data-animal="Frog sciatic nerve" aria-pressed="false">Frog</button>
+            <button class="animal-chip" type="button" data-animal="Giraffe laryngeal nerve" aria-pressed="false">Giraffe</button>
+          </div>
+          <div class="sim-toolbar">
+            <button class="btn primary" id="ai-nerve-simulate" type="button">Begin dissection</button>
+            <button class="btn" id="ai-nerve-replay" type="button">Redo dissection</button>
+          </div>
+          <div class="ai-nerve-status" id="ai-nerve-status" role="status" aria-live="polite">Choose an animal above, then press "Begin dissection".</div>
+          <canvas class="sim-canvas lab-canvas ai-nerve-canvas" id="ai-nerve-canvas" aria-label="Virtual dissection diagram revealing an animal's nervous system, with numbered structures"></canvas>
+          <p class="ai-nerve-caption">Simplified generic body-plan diagram — a schematic teaching aid, not species-accurate anatomical art.</p>
+          <ol class="ai-nerve-legend" id="ai-nerve-legend"></ol>
+          <div class="readouts">
+            <div class="readout"><div class="label">Nervous system</div><div class="value" id="ai-nerve-system">—</div></div>
+            <div class="readout"><div class="label">Axon diameter</div><div class="value" id="ai-nerve-diameter">—</div></div>
+            <div class="readout"><div class="label">Myelinated</div><div class="value" id="ai-nerve-myelin">—</div></div>
+            <div class="readout"><div class="label">Conduction velocity</div><div class="value" id="ai-nerve-velocity">—</div></div>
+            <div class="readout"><div class="label">Resting potential</div><div class="value" id="ai-nerve-resting">—</div></div>
+            <div class="readout"><div class="label">Peak potential</div><div class="value" id="ai-nerve-peak">—</div></div>
+          </div>
+          <div class="ai-nerve-summary-box">
+            <div class="ai-nerve-summary-label">AI briefing <span class="ai-nerve-badge" id="ai-nerve-badge">—</span></div>
+            <p id="ai-nerve-summary">Choose an animal and press "Begin dissection" to generate a summary.</p>
+            <p id="ai-nerve-fact"></p>
+          </div>
+          <div class="ai-nerve-evo-box">
+            <div class="ai-nerve-summary-label">Evolutionary context</div>
+            <svg class="evo-tree" viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simplified evolutionary tree of nervous system organisation across animal groups, with the current animal's lineage highlighted">
+              <line class="evo-line" x1="40" y1="150" x2="160" y2="50"/>
+              <line class="evo-line" x1="40" y1="150" x2="160" y2="230"/>
+              <line class="evo-line" x1="160" y1="230" x2="330" y2="270"/>
+              <line class="evo-line" x1="160" y1="230" x2="330" y2="90"/>
+              <line class="evo-line" x1="330" y1="270" x2="500" y2="190"/>
+              <line class="evo-line" x1="330" y1="270" x2="500" y2="250"/>
+              <line class="evo-line" x1="330" y1="270" x2="500" y2="310"/>
+              <line class="evo-line" x1="330" y1="90" x2="500" y2="90"/>
+
+              <g class="evo-group">
+                <circle class="evo-node" cx="40" cy="150" r="5"/>
+                <text class="evo-label" x="32" y="154" text-anchor="end">common ancestor</text>
+              </g>
+              <g class="evo-group" data-plan="cnidarian_bell">
+                <circle class="evo-node" cx="160" cy="50" r="7"/>
+                <text class="evo-label" x="160" y="34" text-anchor="middle">Cnidaria — nerve net</text>
+              </g>
+              <g class="evo-group" data-plan="generic_bilaterian">
+                <circle class="evo-node" cx="160" cy="230" r="7"/>
+                <text class="evo-label" x="160" y="250" text-anchor="middle">Bilateria — cephalisation begins</text>
+              </g>
+              <g class="evo-group">
+                <circle class="evo-node" cx="330" cy="270" r="5"/>
+                <text class="evo-label" x="330" y="290" text-anchor="middle">Protostomes — ganglia form</text>
+              </g>
+              <g class="evo-group" data-plan="vertebrate">
+                <circle class="evo-node" cx="500" cy="90" r="7"/>
+                <text class="evo-label" x="510" y="94" text-anchor="start">Vertebrates — centralised CNS</text>
+              </g>
+              <g class="evo-group" data-plan="annelid_tube">
+                <circle class="evo-node" cx="500" cy="190" r="7"/>
+                <text class="evo-label" x="510" y="194" text-anchor="start">Annelida</text>
+              </g>
+              <g class="evo-group" data-plan="insect_dorsal">
+                <circle class="evo-node" cx="500" cy="250" r="7"/>
+                <text class="evo-label" x="510" y="254" text-anchor="start">Arthropoda</text>
+              </g>
+              <g class="evo-group" data-plan="cephalopod">
+                <circle class="evo-node" cx="500" cy="310" r="7"/>
+                <text class="evo-label" x="510" y="314" text-anchor="start">Cephalopods — convergent brain</text>
+              </g>
+            </svg>
+            <p class="ai-nerve-caption">Simplified schematic of relationships, not to evolutionary time-scale — the highlighted node is where the current animal's lineage sits.</p>
+            <p id="ai-nerve-evo-note"></p>
+          </div>
+          <p class="lab-note">Estimates, structure placements, and evolutionary notes are AI-generated for teaching intuition (or, offline, drawn from a small built-in reference set) — not verified primary data. Cross-check any figure before citing it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="station" id="station-genetics" data-accent="gel" role="tabpanel" aria-labelledby="tab-genetics" style="--accent:var(--gel)">
+    <div class="station-head">
+      <p class="eyebrow">genetic technology · molecular sieving</p>
+      <h2>Interactive Gel Electrophoresis Chamber</h2>
+      <p>DNA’s negatively charged phosphate backbone experiences an electrical force in an agarose gel. The porous matrix supplies frictional drag, so small fragments migrate farther than large ones over the same time.</p>
+      <div class="field-quote">
+        <p>The dream of every cell is to become two cells.</p>
+        <cite>— François Jacob, molecular biologist, Nobel laureate</cite>
+      </div>
+    </div>
+    <div class="station-grid">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Electric fields separate molecules</h3>
+          <p>Samples begin in wells at the negative cathode. When the chamber is energised, DNA fragments move towards the positive anode. A fragment’s migration speed increases with electrical field strength and decreases with friction in the gel.</p>
+          <div class="eq-block">v = E · q / f<small>E = electrical field strength, q = net charge, f = frictional coefficient in the porous matrix.</small></div>
+          <div class="relevance"><strong>Compare voltage and time:</strong> loading starts the bands in the wells. Raising voltage accelerates every band, while the small fragments still lead the separation.</div>
+        </div>
+        <div class="topic-depth">
+          <div class="depth-card"><h3>Why fragments split</h3><p>DNA has a similar charge-to-mass ratio across fragments, but large fragments experience more obstruction and drag when navigating agarose pores.</p></div>
+          <div class="depth-card"><h3>Applications</h3><p>Gel electrophoresis supports DNA fingerprinting, forensic comparisons, genotyping, checking PCR products, and DNA or RNA purification workflows.</p></div>
+          <div class="depth-card"><h3>Reading the ladder</h3><p>A "DNA ladder" of fragments with known, pre-calibrated sizes is run alongside experimental samples in its own lane. Because migration distance is a (roughly logarithmic) function of fragment size, comparing an unknown band's position against the ladder lets researchers estimate the size of an unknown fragment directly from the gel image — the same logic this module's readouts are built on.</p></div>
+          <div class="depth-card"><h3>Why agarose concentration matters</h3><p>A higher percentage agarose gel has smaller, denser pores, increasing frictional drag on every fragment but disproportionately slowing larger ones — useful for resolving small fragments that would otherwise run together. Lower-percentage gels have larger pores and are used to resolve larger fragments, which would barely move at all through a dense gel. Choosing gel concentration is itself an experimental design decision, not a fixed constant.</p></div>
+        </div>
+
+        <details class="deeper-dive">
+          <summary>Go deeper: from a gel image to a forensic match <span class="plus">+</span></summary>
+          <div class="dive-body">
+            <p>DNA profiling doesn't sequence someone's entire genome — it compares the sizes of specific, highly variable repeated regions (short tandem repeats, or STRs) that differ enormously between individuals but not within one person's own cells. After cutting or amplifying these regions and running them on a gel (or, in modern forensic labs, a more precise capillary electrophoresis instrument built on the same underlying physics), the resulting banding pattern acts like a barcode.</p>
+            <p>The statistical power of this method comes from combining several independent STR loci: while any single site might be shared by chance between unrelated people, the combined probability of an exact match across the standard forensic panel (13–20 loci, depending on jurisdiction) becomes vanishingly small for anyone but an identical twin. This is also the underlying method used in paternity testing and in identifying human remains, where each parent contributes exactly half of a child's alleles at every locus.</p>
+          </div>
+        </details>
+      </div>
+      <div>
+        <div class="card">
+          <canvas class="sim-canvas lab-canvas" id="gel-canvas" aria-label="Animated agarose gel electrophoresis chamber"></canvas>
+          <div class="controls">
+            <div class="field"><div class="field-row"><label for="gel-voltage">Applied voltage</label><span class="val" id="gel-voltage-val">100 V</span></div><input type="range" id="gel-voltage" min="50" max="150" step="5" value="100"></div>
+            <div class="field"><div class="field-row"><label for="gel-density">Agarose concentration</label><span class="val" id="gel-density-val">1.0%</span></div><input type="range" id="gel-density" min=".5" max="2" step=".1" value="1"></div>
+          </div>
+          <div class="sim-toolbar"><button class="btn" id="gel-load" type="button">Load DNA sample</button><button class="btn primary" id="gel-run" type="button">Run gel</button><button class="btn" id="gel-reset" type="button">Reset chamber</button></div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Field strength</div><div class="value" id="gel-field">—</div></div>
+            <div class="readout"><div class="label">Run time</div><div class="value" id="gel-time">0 s</div></div>
+            <div class="readout"><div class="label">Small fragment</div><div class="value" id="gel-small">0 mm</div></div>
+            <div class="readout"><div class="label">Large fragment</div><div class="value" id="gel-large">0 mm</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="station" id="station-learning" data-accent="protein" style="--accent:var(--protein)">
+    <div class="station-head">
+      <p class="eyebrow">cross-topic guide · physics × biology</p>
+      <h2>How the modules connect</h2>
+      <p>These systems look different biologically, but the same physical ideas recur: energy landscapes, thermal fluctuations, gradients, nonlinear feedback, and stochastic motion.</p>
+      <div class="field-quote">
+        <p>Life seems to be orderly and lawful behaviour of matter, not based exclusively on its tendency to go over from order to disorder, but based partly on existing order that is kept up.</p>
+        <cite>— Erwin Schrödinger, physicist, <em>What Is Life?</em>, 1944</cite>
+      </div>
+    </div>
+    <div class="topic-depth">
+      <div class="depth-card">
+        <h3>Energy landscapes</h3>
+        <p>Protein folding explores a rugged conformational free-energy landscape, settling toward — not always reaching — its global minimum. Kinesin reshapes its own landscape with every ATP hydrolysis cycle so that thermal motion becomes biased in one direction. ATP synthase does the reverse: it converts an electrochemical landscape (the proton gradient) directly into mechanical rotation, which the F<sub>1</sub> head then converts back into a chemical landscape by forcing ADP and phosphate together.</p>
+        <div class="map-chips" style="margin-top:10px">
+          <button class="map-chip" data-home-target="station-protein">Protein folding</button>
+          <button class="map-chip" data-home-target="station-rna">RNA molecule</button>
+          <button class="map-chip" data-home-target="station-dna">DNA mechanics</button>
+        </div>
+      </div>
+      <div class="depth-card">
+        <h3>Gradients drive processes</h3>
+        <p>Passive diffusion follows a concentration gradient with no energy input, exactly as Fick's laws describe. Ions move down electrochemical gradients that combine both a concentration term and a voltage term. Plants pull water up a water-potential gradient created by evaporation, mammals push blood down a pressure gradient created by the heart, and the whole respiratory chain — and the light-dependent reactions of photosynthesis, working in reverse across the thylakoid membrane — exists to build a proton gradient that ATP synthase can then spend.</p>
+        <div class="map-chips" style="margin-top:10px">
+          <button class="map-chip" data-home-target="station-membrane">Membrane diffusion</button>
+          <button class="map-chip" data-home-target="station-atp">ATP synthase</button>
+          <button class="map-chip" data-home-target="station-plants">Plant transport</button>
+          <button class="map-chip" data-home-target="station-mammals">Mammal transport</button>
+          <button class="map-chip" data-home-target="station-respiration">Respiration</button>
+          <button class="map-chip" data-home-target="station-photosynthesis">Photosynthesis</button>
+        </div>
+      </div>
+      <div class="depth-card">
+        <h3>Thermal noise is everywhere</h3>
+        <p>Brownian motion is not a special effect built for one simulation — it is the physical reality at the nanoscale. A DNA fragment migrating through a gel, a kinesin head deciding whether to step forward or slip backward, and a base pair vibrating inside the double helix are all, at some level, doing a biased random walk through a thermal bath, competing directly with the deterministic-looking forces of chemistry.</p>
+        <div class="map-chips" style="margin-top:10px">
+          <button class="map-chip" data-home-target="station-dna-zoom">DNA particle zoom</button>
+          <button class="map-chip" data-home-target="station-kinesin">Kinesin motor</button>
+          <button class="map-chip" data-home-target="station-genetics">Gel electrophoresis</button>
+        </div>
+      </div>
+      <div class="depth-card">
+        <h3>Nonlinearity creates behavior</h3>
+        <p>Hodgkin–Huxley dynamics turn smoothly voltage-dependent conductances into an all-or-nothing action potential, because the Na⁺ conductance's own positive feedback loop (more Na⁺ in → more depolarised → more Na⁺ channels open) has a threshold built into it. Reflex arcs inherit that same switch-like logic at the level of a whole circuit, and it holds however differently animals wire up their nervous systems — a stimulus either clears the threshold and fires, or it doesn't.</p>
+        <div class="map-chips" style="margin-top:10px">
+          <button class="map-chip" data-home-target="station-hh">Hodgkin–Huxley</button>
+          <button class="map-chip" data-home-target="station-control">Control &amp; coordination</button>
+          <button class="map-chip" data-home-target="station-ai-nerve">Virtual Dissection</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+  <section style="max-width:1180px;margin:30px auto;padding:0 22px;">
+    <div class="card">
+      <h3 style="margin-top:0;">Quick glossary</h3>
+      <div class="topic-depth" style="margin-top:10px;">
+        <div class="depth-card"><h3>k<sub>B</sub></h3><p>Boltzmann constant: sets the energy scale of thermal fluctuations.</p></div>
+        <div class="depth-card"><h3>ATP</h3><p>Adenosine triphosphate, a major chemical-energy carrier used to drive cellular work.</p></div>
+        <div class="depth-card"><h3>Electrochemical potential</h3><p>The combined chemical and electrical free-energy contribution affecting an ion.</p></div>
+        <div class="depth-card"><h3>Conductance</h3><p>A measure of how readily a pathway carries electrical current for a given voltage difference.</p></div>
+        <div class="depth-card"><h3>Persistence length</h3><p>A polymer length scale over which the direction of a semiflexible chain remains correlated.</p></div>
+        <div class="depth-card"><h3>Free energy</h3><p>A thermodynamic quantity that combines energetic and entropic contributions under specified conditions.</p></div>
+        <div class="depth-card"><h3>Proton-motive force (Δp)</h3><p>The combined pH gradient and membrane voltage across a membrane, available to do work such as driving ATP synthase.</p></div>
+        <div class="depth-card"><h3>Cooperativity</h3><p>When binding at one site on a molecule changes the binding affinity of other sites, producing a sigmoidal (S-shaped) response curve — as in haemoglobin.</p></div>
+        <div class="depth-card"><h3>Water potential (Ψ)</h3><p>A measure of the tendency of water to move from one region to another, combining solute and pressure contributions; water flows from higher to lower Ψ.</p></div>
+        <div class="depth-card"><h3>Reversal potential (Nernst potential)</h3><p>The membrane voltage at which there is no net flow of a given ion, because its electrical and concentration gradients exactly balance.</p></div>
+      </div>
+    </div>
+  </section>
+
+<footer>
+  <div class="foot-inner">
+    <h3>Methodology &amp; sources</h3>
+    <p>The page uses simplified, named physical models rather than purely decorative animations. Parameters and outputs are intended for intuition and exploration, not as quantitative substitutes for experimental or atomistic models:</p>
+    <ul>
+      <li><strong>Protein folding</strong> — the HP lattice model (Dill, 1985), searched with a Metropolis Monte Carlo / simulated-annealing algorithm using end, corner, and pivot moves on a 2D self-avoiding walk. The default sequence is a standard 20-residue HP benchmark.</li>
+      <li><strong>DNA mechanics</strong> — the Marko–Siggia interpolation formula for the worm-like chain model (Marko &amp; Siggia, <em>Macromolecules</em>, 1995), solved numerically by bisection for extension given force.</li>
+      <li><strong>RNA molecule</strong> — a molecular-style, three-dimensional illustration of a folded RNA-like chain. It is designed to explain nucleotide groups and base-pair contacts, not to reproduce a particular experimentally determined RNA structure.</li>
+      <li><strong>DNA particle zoom</strong> — a molecular-scale illustration of the double helix, base-pair spacing, sugar–phosphate backbones, and complementary A–T / G–C pairings.</li>
+      <li><strong>Membrane diffusion</strong> — an explicit two-compartment Brownian-motion simulation with a stochastic membrane-crossing probability, fitted over the pre-equilibrium part of the trace with a least-squares regression on ln|C(t) − C<sub>eq</sub>| to estimate the first-order rate constant.</li>
+      <li><strong>Kinesin</strong> — a phenomenological force–velocity / stepping-rate model with Brownian jitter; it is intentionally not a molecular-dynamics model of kinesin's chemical cycle.</li>
+      <li><strong>Hodgkin–Huxley</strong> — numerical integration of the classical four-variable HH equations with concentration-dependent Nernst reversal potentials and optional Na<sup>+</sup> block.</li>
+      <li><strong>ATP synthase</strong> — a coarse-grained proton-motive-force and torque-balance model; speed and ATP rate are illustrative estimates rather than measurements for one specific enzyme.</li>
+      <li><strong>Transport in plants</strong> — a qualitative cohesion–tension transpiration model, combining an evaporation-rate estimate from temperature, humidity, and wind with a simplified xylem-tension response; not a calibrated potometer.</li>
+      <li><strong>Transport in mammals</strong> — a stylised cardiac pressure–volume cycle plus a Hill-equation haemoglobin dissociation curve (O₂ saturation = pO₂ⁿ / (P₅₀ⁿ + pO₂ⁿ)) with a pCO₂-dependent P₅₀ shift to illustrate the Bohr effect.</li>
+      <li><strong>Respiration</strong> — a schematic electron-transport / chemiosmosis model relating pumped protons to an illustrative proton-motive force and ATP synthase rotor speed; not a kinetic model of specific complexes I–IV.</li>
+      <li><strong>Photosynthesis</strong> — a limiting-factors sandbox combining light intensity, wavelength-dependent absorption, CO₂ concentration, and a temperature-optimum enzyme-rate curve, following Blackman's (1905) limiting-factor principle.</li>
+      <li><strong>Control &amp; coordination</strong> — numerical integration of Hodgkin–Huxley-style membrane dynamics presented as an oscilloscope trace, sharing its underlying equations with the dedicated Hodgkin–Huxley module.</li>
+      <li><strong>Virtual Dissection</strong> — an AI-assisted comparative-anatomy sandbox: a language model proposes axon biophysics and labelled nervous-system structures for a chosen animal, rendered on a simplified generic body-plan diagram; offline presets and a keyword classifier stand in when no live model call is available.</li>
+      <li><strong>Genetic technology</strong> — a simplified gel electrophoresis model in which fragment velocity scales with applied field strength and inversely with a size- and gel-density-dependent drag term.</li>
+      <li><strong>Concept map</strong> — an editorial cross-reference connecting the physical principles shared across all fifteen simulation modules; not a simulation itself.</li>
+    </ul>
+    <p>Built as an independent physics × biology project with deliberately simplified models for interactive learning.</p>
+  </div>
+</footer>
+
+
+
+
+
+    <script src="assets/js/app.js" defer></script>
+</body>
+</html>
